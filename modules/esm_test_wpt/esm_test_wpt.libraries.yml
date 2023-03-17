@@ -1,0 +1,7 @@
+wpt_results:
+  version: VERSION
+  css:
+    layout:
+      assets/dist/css/wpt_results.css: {}
+  dependencies:
+    - esm_test_base/tests

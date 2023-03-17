@@ -1,0 +1,7 @@
+tests:
+  version: VERSION
+  css:
+    layout:
+      assets/dist/css/tests.css: {}
+  dependencies:
+    - external_site_monitor/esm_base

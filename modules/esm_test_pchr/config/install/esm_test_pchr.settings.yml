@@ -1,0 +1,8 @@
+branch: master
+api_url: 'https://api.github.com/repos/bluecadet/panth-github-actions/actions/workflows/47365594/dispatches'
+github_token: github_auth
+dir: 'public://pchr-reports'
+dependencies:
+  enforced:
+    module:
+      - esm_test_pchr

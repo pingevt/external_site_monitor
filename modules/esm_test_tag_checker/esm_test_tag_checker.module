@@ -1,0 +1,208 @@
+<?php
+
+/**
+ * @file
+ * Functions and hooks for hanling the tag checker test.
+ */
+
+use Drupal\Core\Template\Attribute;
+
+/**
+ * Implements hook_theme().
+ */
+function esm_test_tag_checker_theme() {
+  return [
+    'site_test_results__tag_checker_test' => [
+      'variables' => [
+        'test' => NULL,
+        'title' => "",
+        'content' => [],
+      ],
+      'base hook' => 'site_test_results',
+    ],
+    'result__tag_checker_test_result' => [
+      'base hook' => 'result',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_preprocess_THEME().
+ */
+function esm_test_tag_checker_preprocess_site_test_results__tag_checker_test(&$variables) {
+
+  foreach ($variables['content']['data'] as &$url_group) {
+    if (isset($url_group['#attributes'])) {
+      $url_group['attributes'] = new Attribute($url_group['#attributes']);
+    }
+    else {
+      $url_group['attributes'] = new Attribute();
+    }
+
+    foreach ($url_group['group'] as &$table_grp) {
+      if (isset($table_grp['#attributes'])) {
+        $table_grp['attributes'] = new Attribute($table_grp['#attributes']);
+      }
+      else {
+        $table_grp['attributes'] = new Attribute();
+      }
+    }
+  }
+
+  // Add in libraries.
+  $variables['libraries']['#attached']['library'][] = 'esm_test_tag_checker/tag_checker_results';
+}
+
+/**
+ * Implements hook_preprocess_views_view_table().
+ */
+function esm_test_tag_checker_preprocess_views_view_table(&$variables) {
+  $view = $variables['view'];
+
+  if ($view->id() == "tag_checker_test_results" && $view->getDisplay()->display['id'] == "base") {
+    $handler = $view->style_plugin;
+
+    // Set Raw Values.
+    foreach ($variables['rows'] as $index => &$row) {
+      foreach ($row['columns'] as $field => &$field_data) {
+        $raw_value = $handler->getFieldValue($index, $field);
+        $row['columns'][$field]['raw'] = $raw_value;
+      }
+    }
+
+    $fields_to_check = [
+      "field_h1_tags",
+      "field_duplicate_ids",
+    ];
+
+    // Set classes.
+    foreach ($variables['rows'] as $index => &$row) {
+      foreach ($row['columns'] as $field => &$field_data) {
+        if (in_array($field, $fields_to_check)) {
+          $cur_val = (float) $field_data['raw'];
+
+          if ($field == "field_h1_tags" && ($cur_val <= 0 || $cur_val >= 2)) {
+            $field_data['attributes']->addClass("val-error");
+          }
+
+          if ($field == "field_duplicate_ids" && ($cur_val >= 2)) {
+            $field_data['attributes']->addClass("val-error");
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_result().
+ */
+function esm_test_tag_checker_preprocess_result(&$variables) {
+
+  $result = $variables['elements']['#result'];
+  $view_mode = $variables['elements']['#view_mode'];
+
+  if ($result->bundle() == "tag_checker_test_result" && $view_mode == "full") {
+    // Attach Library.
+    $variables['content']['#attached']['library'][] = "esm_test_tag_checker/tag_checker_results";
+
+    // Load json data.
+    if ($file = $result->field_tc_json_report->entity) {
+      $file_system = \Drupal::service('file_system');
+      $realpath = $file_system->realpath($file->getFileUri());
+
+      $contents = json_decode(file_get_contents($realpath));
+
+      // Title Tag.
+      $variables['title_tag'] = $contents->title;
+      $variables['title_tag_attrs'] = new Attribute([]);
+
+      if (count($contents->title) !== 1) {
+        $variables['title_tag_attrs']->addClass("error");
+      }
+
+      // Multiple IDs table.
+      $id_table = [
+        '#type' => "table",
+        '#caption' => "Duplicate IDs",
+        '#attributes' => ['class' => ["ids-table"], "id" => "ids-table"],
+        '#header' => ["ID", "Count"],
+        '#rows' => [],
+        '#empty' => t('No content has been found.'),
+      ];
+      foreach ($contents->ids as $id => $id_data) {
+        $id_table['#rows'][] = [
+          'class' => [($id_data->count > 1) ? "high-count" : "normal-count"],
+          'data' => [$id, $id_data->count],
+        ];
+      }
+
+      $variables['id_table'] = $id_table;
+
+      // H tag table.
+      $h_table = [
+        '#type' => "table",
+        '#caption' => "H tag count",
+        '#attributes' => ['class' => ["h-table"]],
+        '#header' => ["h1", "h2", "h3", "h4", "h5", "h6"],
+        '#rows' => [[]],
+        '#empty' => t('No content has been found.'),
+      ];
+
+      for ($h = 1; $h <= 6; $h++) {
+        $h_table['#rows'][0][] = count($contents->{("h" . $h)});
+      }
+
+      $variables['h_table'] = $h_table;
+
+      // Meta tag Table.
+      $meta_tag_table = [
+        '#type' => "table",
+        '#caption' => "Meta Tags",
+        '#attributes' => ['class' => ["meta-tag-table"]],
+        '#header' => ["Name", "Property", "http-equiv", "Content", "Content Type", "Charset"],
+        '#rows' => [],
+        '#empty' => t('No content has been found.'),
+      ];
+
+      foreach ($contents->meta_tags as $mt_data) {
+
+        $meta_tag_table['#rows'][] = [
+          [
+            'attributes' => [],
+            'data' => isset($mt_data->_attributes->name) ? $mt_data->_attributes->name : "",
+          ],
+          [
+            'attributes' => [],
+            'data' => isset($mt_data->_attributes->property) ? $mt_data->_attributes->property : "",
+          ],
+          [
+            'attributes' => [],
+            'data' => isset($mt_data->_attributes->{'http-equiv'}) ? $mt_data->_attributes->{'http-equiv'} : "",
+          ],
+          [
+            'attributes' => [],
+            'data' => isset($mt_data->_attributes->content) ? $mt_data->_attributes->content : "",
+          ],
+          [
+            'attributes' => [],
+            'data' => isset($mt_data->_attributes->{'content-type'}) ? $mt_data->_attributes->{'content-type'} : "",
+          ],
+          [
+            'attributes' => [],
+            'data' => isset($mt_data->_attributes->charset) ? $mt_data->_attributes->charset : "",
+          ],
+        ];
+      }
+
+      $variables['meta_tag_table'] = $meta_tag_table;
+
+      // Structured Data.
+      $variables['structured_data'] = [];
+      if (!empty($contents->structured_data)) {
+        $variables['structured_data'] = $contents->structured_data[0]->_children[0]->_content;
+      }
+      $variables['structured_data_attrs'] = new Attribute();
+    }
+  }
+}

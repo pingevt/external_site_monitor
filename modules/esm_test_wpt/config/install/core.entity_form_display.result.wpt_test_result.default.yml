@@ -1,0 +1,90 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - esm_test_result_base.result_type.wpt_test_result
+    - field.field.result.wpt_test_result.field_cls_f
+    - field.field.result.wpt_test_result.field_cls_r
+    - field.field.result.wpt_test_result.field_fcp_f
+    - field.field.result.wpt_test_result.field_fcp_r
+    - field.field.result.wpt_test_result.field_lcp_f
+    - field.field.result.wpt_test_result.field_lcp_r
+    - field.field.result.wpt_test_result.field_speed_index_f
+    - field.field.result.wpt_test_result.field_speed_index_r
+    - field.field.result.wpt_test_result.field_start_render_f
+    - field.field.result.wpt_test_result.field_start_render_r
+    - field.field.result.wpt_test_result.field_tbt_f
+    - field.field.result.wpt_test_result.field_tbt_r
+    - field.field.result.wpt_test_result.field_total_bytes_f
+    - field.field.result.wpt_test_result.field_total_bytes_r
+    - field.field.result.wpt_test_result.field_ttfb_f
+    - field.field.result.wpt_test_result.field_ttfb_r
+    - field.field.result.wpt_test_result.field_url
+    - field.field.result.wpt_test_result.field_wpt_json_report
+  module:
+    - file
+    - link
+  enforced:
+    module:
+      - esm_test_wpt
+id: result.wpt_test_result.default
+targetEntityType: result
+bundle: wpt_test_result
+mode: default
+content:
+  created:
+    type: datetime_timestamp
+    weight: 2
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_url:
+    type: link_default
+    weight: 3
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+  field_wpt_json_report:
+    type: file_generic
+    weight: 4
+    region: content
+    settings:
+      progress_indicator: throbber
+    third_party_settings: {  }
+  test:
+    type: entity_reference_autocomplete
+    weight: 1
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  title:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  field_cls_f: true
+  field_cls_r: true
+  field_fcp_f: true
+  field_fcp_r: true
+  field_lcp_f: true
+  field_lcp_r: true
+  field_speed_index_f: true
+  field_speed_index_r: true
+  field_start_render_f: true
+  field_start_render_r: true
+  field_tbt_f: true
+  field_tbt_r: true
+  field_total_bytes_f: true
+  field_total_bytes_r: true
+  field_ttfb_f: true
+  field_ttfb_r: true

@@ -1,0 +1,26 @@
+<?php
+
+/**
+ * @file
+ * Provides un/install functionality.
+ */
+
+use Drupal\Core\Field\BaseFieldDefinition;
+
+/**
+ * @file
+ * Provides install and update functions.
+ */
+
+/**
+ * Add "changed" field to results.
+ */
+function esm_test_result_base_update_9001() {
+  $field_storage_definition = BaseFieldDefinition::create('changed')
+    ->setLabel(t('Changed'))
+    ->setTranslatable(TRUE)
+    ->setDescription(t('The time that the test was last edited.'));
+
+  \Drupal::entityDefinitionUpdateManager()
+    ->installFieldStorageDefinition('changed', 'result', 'result', $field_storage_definition);
+}

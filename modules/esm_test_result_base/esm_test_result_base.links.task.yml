@@ -1,0 +1,26 @@
+entity.result.view:
+  title: View
+  route_name: entity.result.canonical
+  base_route: entity.result.canonical
+entity.result.edit_form:
+  title: Edit
+  route_name: entity.result.edit_form
+  base_route: entity.result.canonical
+entity.result.delete_form:
+  title: Delete
+  route_name: entity.result.delete_form
+  base_route: entity.result.canonical
+  weight: 10
+entity.result.collection:
+  title: Test Results
+  route_name: entity.result.collection
+  base_route: entity.site.collection
+  weight: 10
+entity.result_type.edit_form:
+  title: Edit
+  route_name: entity.result_type.edit_form
+  base_route: entity.result_type.edit_form
+entity.result_type.collection:
+  title: List
+  route_name: entity.result_type.collection
+  base_route: entity.result_type.collection

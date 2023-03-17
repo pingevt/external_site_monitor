@@ -1,0 +1,228 @@
+<?php
+
+/**
+ * @file
+ * Functions and hooks for handling the Cache Hit Ratio test.
+ */
+
+use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\Link;
+use Drupal\Core\Render\Markup;
+use Drupal\Core\Template\Attribute;
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_theme().
+ */
+function esm_test_pchr_theme() {
+  return [
+    'site_test_results__pchr_test' => [
+      'variables' => [
+        'test' => NULL,
+        'title' => "",
+        'content' => [],
+      ],
+      'base hook' => 'site_test_results',
+    ],
+    'result__pchr_test_result' => [
+      'base hook' => 'result',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_preprocess_THEME().
+ */
+function esm_test_pchr_preprocess_site_test_results__pchr_test(&$variables) {
+
+  foreach ($variables['content']['data'] as &$url_group) {
+    if (isset($url_group['#attributes'])) {
+      $url_group['attributes'] = new Attribute($url_group['#attributes']);
+    }
+    else {
+      $url_group['attributes'] = new Attribute();
+    }
+
+    foreach ($url_group['group'] as &$table_grp) {
+      if (isset($table_grp['#attributes'])) {
+        $table_grp['attributes'] = new Attribute($table_grp['#attributes']);
+      }
+      else {
+        $table_grp['attributes'] = new Attribute();
+      }
+    }
+  }
+
+  // Add in libraries.
+  $variables['libraries']['#attached']['library'][] = 'esm_test_pchr/pchr_results';
+}
+
+/**
+ * Implements hook_preprocess_views_view_table().
+ */
+// function esm_test_pchr_preprocess_views_view_table(&$variables) {
+//   $view = $variables['view'];
+
+//   if ($view->id() == "pchr_test_results" && $view->getDisplay()->display['id'] == "base") {
+//     $handler = $view->style_plugin;
+
+//     // Set Raw Values.
+//     // foreach ($variables['rows'] as $index => &$row) {
+//     //   foreach ($row['columns'] as $field => &$field_data) {
+//     //     $raw_value = $handler->getFieldValue($index, $field);
+//     //     $row['columns'][$field]['raw'] = $raw_value;
+//     //   }
+//     // }
+
+//     // $fields_to_check = [
+//       // 'field_ttfb_f',
+//       // 'field_start_render_f',
+//       // 'field_fcp_f',
+//       // 'field_speed_index_f',
+//       // 'field_lcp_f',
+//       // 'field_cls_f',
+//       // 'field_tbt_f',
+//       // 'field_total_bytes_f',
+//     // ];
+
+//     // Set classes.
+//     // foreach ($variables['rows'] as $index => &$row) {
+//     //   foreach ($row['columns'] as $field => &$field_data) {
+//     //     if (in_array($field, $fields_to_check)) {
+//     //       $cur_val = (float) $field_data['raw'];
+
+//     //       if ($index < (count($variables['rows']) - 1)) {
+//     //         $prev_val = $variables['rows'][($index + 1)]['columns'][$field]['raw'];
+//     //         if ($cur_val > $prev_val) {
+//     //           $field_data['attributes']->addClass("val-rising");
+//     //         }
+//     //         elseif ($cur_val < $prev_val) {
+//     //           $field_data['attributes']->addClass("val-falling");
+//     //         }
+//     //       }
+//     //     }
+//     //   }
+//     // }
+//   }
+// }
+
+/**
+ * Implements hook_preprocess_result().
+ */
+function esm_test_pchr_preprocess_result(&$variables) {
+
+  $result = $variables['elements']['#result'];
+  $view_mode = $variables['elements']['#view_mode'];
+
+  if ($result->bundle() == "pchr_test_result" && $view_mode == "full") {
+
+    // Set up chart.
+    $runnerManager = \Drupal::service('plugin.manager.esm_test_runner');
+    $test = $result->test->entity;
+    $plugin_id = "pchr_test_runner";
+    $runner = $runnerManager->createInstance($plugin_id);
+    $variables['chart'] = $runner->getDataChart($test, 30);
+
+
+    $table = [
+      '#type' => "table",
+      '#caption' => "Cache Hit Ratio",
+      '#attributes' => ['class' => ["pchr-results-full"]],
+      '#header' => [
+        "Period",
+        "Visits",
+        "Pages Served",
+        "Cache Hits",
+        "Cache Misses",
+        "Cache Hit Ratio",
+        "7 day running",
+        "30 day running",
+      ],
+      '#rows' => [],
+      '#empty' => t('No content has been found.'),
+    ];
+
+    $rows = [];
+    list(
+      $period,
+      $visits,
+      $pages_served,
+      $cache_hits,
+      $cache_misses,
+      $cache_hit_ratios,
+      $running7_ratios,
+      $running30_ratios,
+    ) = $runner->getData($test);
+
+    foreach ($period as $i => $p) {
+      // $data->cache_hit_ratio .= "%";
+      $rows[] = [
+        $period[$i],
+        $visits[$i],
+        $pages_served[$i],
+        $cache_hits[$i],
+        $cache_misses[$i],
+        number_format($cache_hit_ratios[$i], 2) . "%",
+        ($running7_ratios[$i]) ? number_format($running7_ratios[$i], 2) . "%" : "-",
+        ($running30_ratios[$i]) ? number_format($running30_ratios[$i], 2) . "%" : "-",
+      ];
+    }
+
+
+    $table['#rows'] = array_reverse($rows);
+    $variables['table'] = $table;
+
+    // Attach Library.
+    $variables['libraries']['#attached']['library'][] = "esm_test_pchr/pchr_results";
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave().
+ */
+function esm_test_pchr_result_presave($entity) {
+  esm_test_pchr_update_result($entity);
+}
+
+/**
+ * Update the Result entity based on saved json Report.
+ */
+function esm_test_pchr_update_result($entity) {
+  if ($entity->bundle() == "pchr_test_result") {
+
+    // Grab last 30 days.
+    $query = \Drupal::database()->select("esm_pchr_data", 'ep');
+    $query->fields('ep', []);
+    $query->condition('result', $entity->id());
+    $query->range(0, 30);
+    $query->orderBy('period', 'DESC');
+    $exisitng_data = $query->execute()->fetchAll();
+
+    $count7 = 0;
+    $count7_sum = 0;
+    $count30 = 0;
+    $count30_sum = 0;
+
+    foreach ($exisitng_data as $i => $data) {
+      if ($i == 0) {
+        $entity->field_latest_ratio = $data->cache_hit_ratio;
+      }
+      if ($i < 7) {
+        $count7++;
+        $count7_sum += $data->cache_hit_ratio;
+      }
+      if ($i < 30) {
+        $count30++;
+        $count30_sum += $data->cache_hit_ratio;
+      }
+    }
+
+    if ($count7 > 0) {
+      $entity->field_7_day = ($count7_sum / $count7);
+    }
+    if ($count30 > 0) {
+      $entity->field_30_day = ($count30_sum / $count30);
+    }
+
+  }
+}

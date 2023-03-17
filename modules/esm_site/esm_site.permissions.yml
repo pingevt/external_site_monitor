@@ -1,0 +1,13 @@
+administer site:
+  title: 'Administer site settings'
+  restrict access: true
+access site overview:
+  title: 'Access site overview page'
+delete site:
+  title: Delete site
+create site:
+  title: Create site
+view site:
+  title: View site
+edit site:
+  title: Edit site

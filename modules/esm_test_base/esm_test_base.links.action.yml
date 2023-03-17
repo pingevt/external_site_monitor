@@ -1,0 +1,11 @@
+test.type_add:
+  route_name: entity.test_type.add_form
+  title: 'Add test type'
+  appears_on:
+    - entity.test_type.collection
+
+test.add_page:
+  route_name: entity.test.add_page
+  title: 'Add test'
+  appears_on:
+    - entity.test.collection

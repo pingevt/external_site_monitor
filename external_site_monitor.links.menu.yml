@@ -1,0 +1,6 @@
+external_site_monitor.admin_config:
+  title: 'External Site Monitor Config'
+  route_name: external_site_monitor.admin_config
+  parent: system.admin_config
+  description: 'Configure settings specific to this site.'
+  weight: 100

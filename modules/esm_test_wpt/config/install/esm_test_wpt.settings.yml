@@ -1,0 +1,5 @@
+dir: 'public://wpt-reports'
+dependencies:
+  enforced:
+    module:
+      - esm_test_wpt

@@ -1,0 +1,70 @@
+<article{{ attributes }}>
+  {% if content %}
+
+    {{- content.test -}}
+    {{- content.field_url -}}
+    {{- content.field_wpt_json_report -}}
+
+    {{ report_link }}*
+
+    <div class="report-stats">
+      {% if location_str %}
+        <div class="field field--type-text field--label-above">
+          <div class="field__label">Location</div>
+          <div class="field__item">{{ location_str }}</div>
+        </div>
+      {% endif %}
+
+      {% if from_str %}
+        <div class="field field--type-text field--label-above">
+          <div class="field__label">From</div>
+          <div class="field__item">{{ from_str }}</div>
+        </div>
+      {% endif %}
+
+      {% if browser_str %}
+        <div class="field field--type-text field--label-above">
+          <div class="field__label">Browser</div>
+          <div class="field__item">{{ browser_str }}</div>
+        </div>
+      {% endif %}
+    </div>
+
+    <h3>First View</h3>
+    <div class="wpt-result-grid">
+      {{ content.field_ttfb_f }}
+      {{ content.field_start_render_f }}
+      {{ content.field_fcp_f }}
+      {{ content.field_speed_index_f }}
+      {{ content.field_lcp_f }}
+      {{ content.field_cls_f }}
+      {{ content.field_tbt_f }}
+      {{ content.field_total_bytes_f }}
+    </div>
+
+    {% if first_view_waterfull_url %}
+      <img src="{{first_view_waterfull_url}}" alt="First view waterfall image">
+    {% endif %}
+
+    <h3>Repeat View</h3>
+    <div class="wpt-result-grid">
+      {{ content.field_ttfb_r }}
+      {{ content.field_start_render_r }}
+      {{ content.field_fcp_r }}
+      {{ content.field_speed_index_r }}
+      {{ content.field_lcp_r }}
+      {{ content.field_cls_r }}
+      {{ content.field_tbt_r }}
+      {{ content.field_total_bytes_r }}
+    </div>
+
+    {% if repeat_view_waterfull_url %}
+      <img src="{{repeat_view_waterfull_url}}" alt="RTe3peat view waterfall image">
+    {% endif %}
+
+    {{ libraries }}
+
+  {% endif %}
+</article>
+
+

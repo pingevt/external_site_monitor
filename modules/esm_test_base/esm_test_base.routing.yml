@@ -1,0 +1,54 @@
+site.tests:
+  path: '/site/{site}/tests'
+  defaults:
+    _controller: '\Drupal\esm_test_base\Controller\SiteTests::render'
+  requirements:
+    _permission: 'access result overview'
+  options:
+    _admin_route: TRUE
+    parameters:
+      site:
+        type: entity:site
+
+# site.test_results:
+#   path: '/site/{site}/{test}'
+#   defaults:
+#     _controller: '\Drupal\esm_test_base\Controller\TestResults::render'
+#   requirements:
+#     _permission: 'access result overview'
+#   options:
+#     _admin_route: TRUE
+#     parameters:
+#       site:
+#         type: entity:site
+#       test:
+#         type: entity:test
+
+test.test_results:
+  path: '/test/{test}/results'
+  defaults:
+    _controller: '\Drupal\esm_test_base\Controller\TestResults::renderFromTest'
+  requirements:
+    _permission: 'access result overview'
+  options:
+    _admin_route: TRUE
+    parameters:
+      test:
+        type: entity:test
+
+# route_callbacks:
+#   - '\Drupal\esm_test_base\Routing\TestResultsRoutes::routes'
+
+
+
+entity.test.run_test_now:
+  path: '/test/{test}/run'
+  defaults:
+    _controller: '\Drupal\esm_test_base\Controller\SiteTests::runNow'
+  requirements:
+    _permission: 'access test overview'
+  options:
+    _admin_route: TRUE
+    parameters:
+      test:
+        type: entity:test

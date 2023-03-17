@@ -1,0 +1,22 @@
+entity.url_group.settings:
+  title: Settings
+  route_name: entity.url_group.settings
+  base_route: entity.url_group.settings
+entity.url_group.view:
+  title: View
+  route_name: entity.url_group.canonical
+  base_route: entity.url_group.canonical
+entity.url_group.edit_form:
+  title: Edit
+  route_name: entity.url_group.edit_form
+  base_route: entity.url_group.canonical
+entity.url_group.delete_form:
+  title: Delete
+  route_name: entity.url_group.delete_form
+  base_route: entity.url_group.canonical
+  weight: 10
+entity.url_group.collection:
+  title: Url Group
+  route_name: entity.url_group.collection
+  base_route: entity.site.collection
+  weight: 10

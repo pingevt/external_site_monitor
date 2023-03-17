@@ -1,0 +1,14 @@
+administer result types:
+  title: 'Administer result types'
+  description: 'Maintain the types of result entity.'
+  restrict access: true
+access result overview:
+  title: 'Access result overview page'
+delete result:
+  title: Delete result
+create result:
+  title: Create result
+view result:
+  title: View result
+edit result:
+  title: Edit result

@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - esm_site
+name: 'Site Type'
+vid: site_type
+description: ''
+weight: 99

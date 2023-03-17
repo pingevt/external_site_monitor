@@ -1,0 +1,5 @@
+dir: 'public://html-val-reports'
+dependencies:
+  enforced:
+    module:
+      - esm_test_html_val

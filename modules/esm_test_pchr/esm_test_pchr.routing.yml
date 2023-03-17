@@ -1,0 +1,20 @@
+esm_test_pchr.pchr_test_settings:
+  path: '/admin/config/esm/pchr-test-settings'
+  defaults:
+    _title: 'PCHR settings'
+    _form: 'Drupal\esm_test_pchr\Form\PchrTestSettingsForm'
+  requirements:
+    _permission: 'administer site configuration'
+
+esm_test_pchr.pchr_results:
+  path: /api/pchr-report-results/{test}
+  defaults:
+    _controller: '\Drupal\esm_test_pchr\Controller\Api::pchrResults'
+  methods: [POST]
+  requirements:
+    _permission: "use esm api"
+  options:
+    _auth: [ 'key_auth' ]
+    parameters:
+      test:
+        type: entity:test

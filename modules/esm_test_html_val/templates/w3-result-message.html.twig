@@ -1,0 +1,9 @@
+<div {{ attributes }}>
+  <div><span class="severity">{{ severity }}</span> {% if message %} {{ message }} {% endif %} </div>
+  {% if pos_info %}
+    <div>{{ pos_info }}</div>
+  {% endif %}
+  {% if extract %}
+    <code>{{ extract }}</code>
+  {% endif %}
+</div>

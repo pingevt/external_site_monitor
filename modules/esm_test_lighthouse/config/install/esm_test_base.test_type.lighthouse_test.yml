@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - esm_test_lighthouse
+id: lighthouse_test
+label: 'Lighthouse Test'

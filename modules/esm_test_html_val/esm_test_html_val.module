@@ -1,0 +1,202 @@
+<?php
+
+/**
+ * @file
+ * Module which provides functionality for running the HTML validation tests.
+ */
+
+use Drupal\Core\Template\Attribute;
+use Drupal\Component\Utility\Html;
+
+/**
+ * Implements hook_theme().
+ */
+function esm_test_html_val_theme() {
+  return [
+    'site_test_results__html_val_test' => [
+      'variables' => [
+        'test' => NULL,
+        'title' => "",
+        'content' => [],
+      ],
+      'base hook' => 'site_test_results',
+    ],
+    'result__html_val_test_result' => [
+      'base hook' => 'result',
+    ],
+    'w3_result_message' => [
+      'render element' => 'message',
+    ],
+  ];
+}
+
+/**
+ * Prepares variables for w3_result templates.
+ *
+ * Default template: w3-result.html.twig.
+ */
+function template_preprocess_w3_result_message(array &$variables) {
+  $message_data = $variables['message']['#message'];
+
+  $variables['attributes']['class'][] = "ws-message";
+
+  // Set Severity.
+  $variables['severity'] = isset($message_data->subType) ? $message_data->subType : $message_data->type;
+  $variables['attributes']['class'][] = Html::cleanCssIdentifier("ws-message--" . $variables['severity']);
+
+  // Set Message.
+  $variables['message'] = isset($message_data->message) ? $message_data->message : NULL;
+
+  // Position Info.
+  if (isset($message_data->firstColumn) && isset($message_data->lastLine) && isset($message_data->lastColumn)) {
+    $variables['pos_info'] = "From line ";
+    $variables['pos_info'] .= isset($message_data->firstLine) ? isset($message_data->firstLine) : $message_data->lastLine;
+    $variables['pos_info'] .= " column " . $message_data->firstColumn;
+    $variables['pos_info'] .= "; to line " . $message_data->lastLine . ", column " . $message_data->lastColumn;
+  }
+
+  // Set extract.
+  if (isset($message_data->extract)) {
+    $extract = $message_data->extract;
+
+    // Add highlight.
+    if (isset($message_data->hiliteStart) && isset($message_data->hiliteLength)) {
+      $text_array = str_split($extract);
+
+      foreach ($text_array as &$char) {
+        $char = str_replace(["\r", "\n"], '↩', htmlentities($char));
+      }
+
+      array_splice($text_array, ($message_data->hiliteStart + $message_data->hiliteLength), 0, ["</b>"]);
+      array_splice($text_array, ($message_data->hiliteStart), 0, ["<b>"]);
+
+      $extract = implode("", $text_array);
+    }
+
+    $variables['extract'] = ['#markup' => $extract];
+  }
+}
+
+/**
+ * Implements hook_preprocess_THEME().
+ */
+function esm_test_html_val_preprocess_site_test_results__html_val_test(&$variables) {
+
+  foreach ($variables['content']['data'] as &$url_group) {
+    if (isset($url_group['#attributes'])) {
+      $url_group['attributes'] = new Attribute($url_group['#attributes']);
+    }
+    else {
+      $url_group['attributes'] = new Attribute();
+    }
+
+    foreach ($url_group['group'] as &$table_grp) {
+      if (isset($table_grp['#attributes'])) {
+        $table_grp['attributes'] = new Attribute($table_grp['#attributes']);
+      }
+      else {
+        $table_grp['attributes'] = new Attribute();
+      }
+    }
+  }
+
+  // Add in libraries.
+  $variables['libraries']['#attached']['library'][] = 'esm_test_html_val/htm_val';
+}
+
+/**
+ * Implements hook_preprocess_views_view_table().
+ */
+function esm_test_html_val_preprocess_views_view_table(&$variables) {
+  $view = $variables['view'];
+
+  if ($view->id() == "html_val_test_results" && $view->getDisplay()->display['id'] == "base") {
+    $handler = $view->style_plugin;
+
+    // Set Raw Values.
+    foreach ($variables['rows'] as $index => &$row) {
+      foreach ($row['columns'] as $field => &$field_data) {
+        $raw_value = $handler->getFieldValue($index, $field);
+        $row['columns'][$field]['raw'] = $raw_value;
+      }
+    }
+
+    $fields_to_check = [
+      "field_error",
+      "field_info",
+      "field_non_doc_error",
+    ];
+
+    // Set classes.
+    foreach ($variables['rows'] as $index => &$row) {
+      foreach ($row['columns'] as $field => &$field_data) {
+        if (in_array($field, $fields_to_check)) {
+          $cur_val = (float) $field_data['raw'];
+
+          if ($index < (count($variables['rows']) - 1)) {
+            $prev_val = $variables['rows'][($index + 1)]['columns'][$field]['raw'];
+            if ($cur_val > $prev_val) {
+              $field_data['attributes']->addClass("val-rising");
+            }
+            elseif ($cur_val < $prev_val) {
+              $field_data['attributes']->addClass("val-falling");
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_result().
+ */
+function esm_test_html_val_preprocess_result(&$variables) {
+
+  $result = $variables['elements']['#result'];
+  $view_mode = $variables['elements']['#view_mode'];
+
+  if ($result->bundle() == "html_val_test_result" && $view_mode == "full") {
+    // Attach Library.
+    $variables['content']['#attached']['library'][] = "esm_test_html_val/htm_val";
+
+    // Load json data.
+    if ($file = $result->field_html_val_json_report->entity) {
+      $file_system = \Drupal::service('file_system');
+      $realpath = $file_system->realpath($file->getFileUri());
+
+      $contents = file_get_contents($realpath);
+      $message_data = json_decode($contents);
+
+      if ($message_data == NULL) {
+        \Drupal::messenger()->addWarning('Bad data response');
+      }
+
+      // Build message build array.
+      $message_list = [
+        '#theme' => "item_list",
+        '#title' => "Result Message(s)",
+        '#list_type' => "ol",
+        '#attributes' => ['class' => 'ws-message--list'],
+        // '#wrapper_attributes' => ['class' => 'ws-message--container'],
+        '#empty' => "NO MESSAGES",
+        "#items" => [],
+        '#weight' => 100,
+        '#prefix' => '<div class="ws-message--container item-list">',
+        '#suffix' => '</div>',
+      ];
+
+      if (isset($message_data->messages)) {
+        foreach ($message_data->messages as $md) {
+          $message_list['#items'][] = [
+            '#theme' => 'w3_result_message',
+            '#message' => $md,
+          ];
+        }
+      }
+
+      $variables['content']['message_list'] = $message_list;
+
+    }
+  }
+}

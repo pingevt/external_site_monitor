@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - esm_test_base
+id: example_test
+label: 'Example Test'

@@ -1,0 +1,33 @@
+<article{{ attributes }}>
+  {{- status_badge -}}
+
+  {% if content %}
+    {{- content|without('field_blc_page_count', 'field_blc_link_count', 'field_blc_problem_link_count') -}}
+
+    {% if processed_link_count %}
+      <div class="field field--type-integer field--label-above">
+        <div class="field__label">Processed Links</div>
+        <div class="field__item">{{ processed_link_count|number_format(0) }}</div>
+
+        <div class="field__item">{{ processed_link_count_perc }}% complete</div>
+        <div class="field__item__status_bar">
+          <div class="field__item__status_bar__ind" style="width: {{ processed_link_count_perc }}%"></div>
+        </div>
+      </div>
+    {% endif %}
+
+    <div class="page-link-status-wrapper">
+      {{ content.field_blc_page_count }}
+      {{ content.field_blc_link_count }}
+      {{ content.field_blc_problem_link_count }}
+    </div>
+
+    {# link_table #}
+    {% if link_table %}
+      {{ link_table }}
+    {% endif %}
+
+  {% endif %}
+</article>
+
+

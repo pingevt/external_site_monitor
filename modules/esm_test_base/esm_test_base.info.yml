@@ -1,0 +1,14 @@
+name: 'External Site Monitor: Test Base'
+type: module
+description: 'Provides a test entity.'
+package: External Site Monitor
+core: 8.x
+core_version_requirement: ^8 || ^9
+dependencies:
+  - drupal:text
+  - esm_site
+  - esm_url_group
+  # - esm_test_result_base
+  - ultimate_cron
+  - charts
+configure: entity.test_type.collection

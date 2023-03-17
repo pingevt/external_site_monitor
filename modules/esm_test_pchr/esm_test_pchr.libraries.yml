@@ -1,0 +1,7 @@
+pchr_results:
+  version: VERSION
+  css:
+    layout:
+      assets/dist/css/pchr_results.css: {}
+  dependencies:
+    - esm_test_base/tests

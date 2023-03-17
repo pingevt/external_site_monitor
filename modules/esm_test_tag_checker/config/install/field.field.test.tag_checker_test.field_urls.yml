@@ -1,0 +1,25 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - esm_test_base.test_type.tag_checker_test
+    - field.storage.test.field_urls
+  module:
+    - link
+  enforced:
+    module:
+      - esm_test_tag_checker
+id: test.tag_checker_test.field_urls
+field_name: field_urls
+entity_type: test
+bundle: tag_checker_test
+label: Urls
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  title: 0
+  link_type: 16
+field_type: link

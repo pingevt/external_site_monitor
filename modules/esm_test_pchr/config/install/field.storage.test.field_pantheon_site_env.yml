@@ -1,0 +1,23 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - esm_test_base
+  enforced:
+    module:
+      - esm_test_pchr
+id: test.field_pantheon_site_env
+field_name: field_pantheon_site_env
+entity_type: test
+type: string
+settings:
+  max_length: 255
+  case_sensitive: false
+  is_ascii: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

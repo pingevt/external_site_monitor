@@ -1,0 +1,11 @@
+name: 'External Site Monitor: Pantheon Cache Hit Ratio'
+type: module
+description: 'Provides data for Pantheon Cache Hit Ratio'
+package: External Site Monitor
+core: 8.x
+core_version_requirement: ^8 || ^9
+dependencies:
+  - esm_test_base
+  - esm_test_result_base
+
+configure: esm_test_wpt.wpt_test_settings

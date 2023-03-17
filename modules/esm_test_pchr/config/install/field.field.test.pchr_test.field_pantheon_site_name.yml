@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - esm_test_base.test_type.pchr_test
+    - field.storage.test.field_pantheon_site_name
+  enforced:
+    module:
+      - esm_test_pchr
+id: test.pchr_test.field_pantheon_site_name
+field_name: field_pantheon_site_name
+entity_type: test
+bundle: pchr_test
+label: 'Pantheon Site Name'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

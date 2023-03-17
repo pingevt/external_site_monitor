@@ -1,0 +1,13 @@
+administer url group:
+  title: 'Administer url group settings'
+  restrict access: true
+access url group overview:
+  title: 'Access url group overview page'
+delete url group:
+  title: Delete url group
+create url group:
+  title: Create url group
+view url group:
+  title: View url group
+edit url group:
+  title: Edit url group

@@ -1,0 +1,7 @@
+status_badge:
+  version: VERSION
+  css:
+    layout:
+      assets/dist/css/status_badge.css: {}
+  dependencies:
+    - external_site_monitor/esm_base

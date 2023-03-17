@@ -1,0 +1,7 @@
+esm_test_tag_checker.tag_checker_test_settings:
+  path: '/admin/config/esm/tag-checker-test-settings'
+  defaults:
+    _title: 'HTML Validation test settings'
+    _form: 'Drupal\esm_test_tag_checker\Form\TagCheckerTestSettingsForm'
+  requirements:
+    _permission: 'administer site configuration'

@@ -1,0 +1,249 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - esm_test_result_base.result_type.wpt_test_result
+    - field.field.result.wpt_test_result.field_cls_f
+    - field.field.result.wpt_test_result.field_cls_r
+    - field.field.result.wpt_test_result.field_fcp_f
+    - field.field.result.wpt_test_result.field_fcp_r
+    - field.field.result.wpt_test_result.field_lcp_f
+    - field.field.result.wpt_test_result.field_lcp_r
+    - field.field.result.wpt_test_result.field_speed_index_f
+    - field.field.result.wpt_test_result.field_speed_index_r
+    - field.field.result.wpt_test_result.field_start_render_f
+    - field.field.result.wpt_test_result.field_start_render_r
+    - field.field.result.wpt_test_result.field_tbt_f
+    - field.field.result.wpt_test_result.field_tbt_r
+    - field.field.result.wpt_test_result.field_total_bytes_f
+    - field.field.result.wpt_test_result.field_total_bytes_r
+    - field.field.result.wpt_test_result.field_ttfb_f
+    - field.field.result.wpt_test_result.field_ttfb_r
+    - field.field.result.wpt_test_result.field_url
+    - field.field.result.wpt_test_result.field_wpt_json_report
+  module:
+    - esm_test_wpt
+    - file
+    - link
+  enforced:
+    module:
+      - esm_test_wpt
+id: result.wpt_test_result.default
+targetEntityType: result
+bundle: wpt_test_result
+mode: default
+content:
+  field_cls_f:
+    type: milliseconds
+    label: above
+    settings:
+      thousand_separator: ''
+      decimal_separator: .
+      scale: '3'
+      prefix_suffix: '1'
+    third_party_settings: {  }
+    weight: 9
+    region: content
+  field_cls_r:
+    type: milliseconds
+    label: above
+    settings:
+      thousand_separator: ''
+      decimal_separator: .
+      scale: '3'
+      prefix_suffix: '1'
+    third_party_settings: {  }
+    weight: 17
+    region: content
+  field_fcp_f:
+    type: milliseconds
+    label: above
+    settings:
+      thousand_separator: ''
+      decimal_separator: .
+      scale: '3'
+      prefix_suffix: '1'
+    third_party_settings: {  }
+    weight: 6
+    region: content
+  field_fcp_r:
+    type: milliseconds
+    label: above
+    settings:
+      thousand_separator: ''
+      decimal_separator: .
+      scale: '3'
+      prefix_suffix: '1'
+    third_party_settings: {  }
+    weight: 14
+    region: content
+  field_lcp_f:
+    type: milliseconds
+    label: above
+    settings:
+      thousand_separator: ''
+      decimal_separator: .
+      scale: '3'
+      prefix_suffix: '1'
+    third_party_settings: {  }
+    weight: 8
+    region: content
+  field_lcp_r:
+    type: milliseconds
+    label: above
+    settings:
+      thousand_separator: ''
+      decimal_separator: .
+      scale: '3'
+      prefix_suffix: '1'
+    third_party_settings: {  }
+    weight: 16
+    region: content
+  field_speed_index_f:
+    type: milliseconds
+    label: above
+    settings:
+      thousand_separator: ''
+      decimal_separator: .
+      scale: '3'
+      prefix_suffix: '1'
+    third_party_settings: {  }
+    weight: 7
+    region: content
+  field_speed_index_r:
+    type: milliseconds
+    label: above
+    settings:
+      thousand_separator: ''
+      decimal_separator: .
+      scale: '3'
+      prefix_suffix: '1'
+    third_party_settings: {  }
+    weight: 15
+    region: content
+  field_start_render_f:
+    type: milliseconds
+    label: above
+    settings:
+      thousand_separator: ''
+      decimal_separator: .
+      scale: '3'
+      prefix_suffix: '1'
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  field_start_render_r:
+    type: milliseconds
+    label: above
+    settings:
+      thousand_separator: ''
+      decimal_separator: .
+      scale: '3'
+      prefix_suffix: '1'
+    third_party_settings: {  }
+    weight: 13
+    region: content
+  field_tbt_f:
+    type: milliseconds
+    label: above
+    settings:
+      thousand_separator: ''
+      decimal_separator: .
+      scale: '3'
+      prefix_suffix: '1'
+    third_party_settings: {  }
+    weight: 10
+    region: content
+  field_tbt_r:
+    type: milliseconds
+    label: above
+    settings:
+      thousand_separator: ''
+      decimal_separator: .
+      scale: '3'
+      prefix_suffix: '1'
+    third_party_settings: {  }
+    weight: 18
+    region: content
+  field_total_bytes_f:
+    type: bytes
+    label: above
+    settings:
+      thousand_separator: ''
+      decimal_separator: .
+      scale: 2
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 11
+    region: content
+  field_total_bytes_r:
+    type: bytes
+    label: above
+    settings:
+      thousand_separator: ''
+      decimal_separator: .
+      scale: 2
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 19
+    region: content
+  field_ttfb_f:
+    type: milliseconds
+    label: above
+    settings:
+      thousand_separator: ''
+      decimal_separator: .
+      scale: '3'
+      prefix_suffix: '1'
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_ttfb_r:
+    type: milliseconds
+    label: above
+    settings:
+      thousand_separator: ''
+      decimal_separator: .
+      scale: '3'
+      prefix_suffix: '1'
+    third_party_settings: {  }
+    weight: 12
+    region: content
+  field_url:
+    type: link
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_wpt_json_report:
+    type: file_default
+    label: above
+    settings:
+      use_description_as_link_text: true
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  test:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  title:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  created: true

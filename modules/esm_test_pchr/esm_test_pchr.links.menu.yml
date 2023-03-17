@@ -1,0 +1,5 @@
+esm_test_pchr.pchr_test_settings:
+  title: Pantheon Cache Hit Ratio Settings
+  parent: external_site_monitor.admin_config
+  route_name: esm_test_pchr.pchr_test_settings
+  weight: 14

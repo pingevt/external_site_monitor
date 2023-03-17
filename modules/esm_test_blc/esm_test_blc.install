@@ -1,0 +1,104 @@
+<?php
+
+/**
+ * @file
+ * Provides un/install functionality.
+ */
+
+use Drupal\Core\Database\Database;
+
+/**
+ * Implements hook_schema().
+ */
+function esm_test_blc_schema() {
+  return _esm_test_blc_schemas();
+}
+
+/**
+ * Custom schema for BLC tables.
+ */
+function _esm_test_blc_schemas() {
+
+  // Sitemaps Table.
+  $schema['esm_blc_link'] = [
+    'description' => 'A table to store blc links.',
+    'fields' => [
+      'id' => [
+        'description' => 'The unique ID',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'result' => [
+        'description' => 'The result this sitemap belongs to.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'full_url' => [
+        'description' => 'The url of the sitemap.',
+        'type' => 'varchar',
+        'length' => 6000,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'checked' => [
+        'description' => 'The state of sitemap.',
+        'type' => 'int',
+        'unsigned' => FALSE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'link_type' => [
+        'description' => 'What type of link this is.',
+        'type' => 'int',
+        'unsigned' => FALSE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'external' => [
+        'description' => 'If this link is external to the root.',
+        'type' => 'int',
+        'unsigned' => FALSE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'http_status' => [
+        'description' => 'HTTP status of this link.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'default' => NULL,
+      ],
+      'data' => [
+        'description' => 'Serialized Data for this link',
+        'type' => 'blob',
+        'size' => 'big',
+        'not null' => FALSE,
+        'serialize' => TRUE,
+      ],
+    ],
+    'primary key' => ['id'],
+    'foreign keys' => [
+      'result' => [
+        'table' => 'result',
+        'columns' => [
+          'result' => 'id',
+        ],
+      ],
+    ],
+  ];
+
+  return $schema;
+}
+
+/**
+ * Add esm_blc_link table.
+ */
+function esm_test_blc_update_9001() {
+  $my_schemas = _esm_test_blc_schemas();
+
+  $schema = Database::getConnection()->schema();
+  $schema->createTable('esm_blc_link', $my_schemas['esm_blc_link']);
+}

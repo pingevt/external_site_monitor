@@ -1,0 +1,11 @@
+result.type_add:
+  route_name: entity.result_type.add_form
+  title: 'Add result type'
+  appears_on:
+    - entity.result_type.collection
+
+result.add_page:
+  route_name: entity.result.add_page
+  title: 'Add result'
+  appears_on:
+    - entity.result.collection

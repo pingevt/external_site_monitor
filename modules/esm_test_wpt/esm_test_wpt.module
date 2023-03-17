@@ -1,0 +1,224 @@
+<?php
+
+/**
+ * @file
+ * Functions and hooks for hanling the tag checker test.
+ */
+
+use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\Link;
+use Drupal\Core\Render\Markup;
+use Drupal\Core\Template\Attribute;
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_theme().
+ */
+function esm_test_wpt_theme() {
+  return [
+    'site_test_results__wpt_test' => [
+      'variables' => [
+        'test' => NULL,
+        'title' => "",
+        'content' => [],
+      ],
+      'base hook' => 'site_test_results',
+    ],
+    'result__wpt_test_result' => [
+      'base hook' => 'result',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_preprocess_THEME().
+ */
+function esm_test_wpt_preprocess_site_test_results__wpt_test(&$variables) {
+
+  foreach ($variables['content']['data'] as &$url_group) {
+    if (isset($url_group['#attributes'])) {
+      $url_group['attributes'] = new Attribute($url_group['#attributes']);
+    }
+    else {
+      $url_group['attributes'] = new Attribute();
+    }
+
+    foreach ($url_group['group'] as &$table_grp) {
+      if (isset($table_grp['#attributes'])) {
+        $table_grp['attributes'] = new Attribute($table_grp['#attributes']);
+      }
+      else {
+        $table_grp['attributes'] = new Attribute();
+      }
+    }
+  }
+
+  // Add in libraries.
+  $variables['libraries']['#attached']['library'][] = 'esm_test_wpt/wpt_results';
+}
+
+/**
+ * Implements hook_preprocess_views_view_table().
+ */
+function esm_test_wpt_preprocess_views_view_table(&$variables) {
+  $view = $variables['view'];
+
+  if ($view->id() == "wpt_test_results" && $view->getDisplay()->display['id'] == "base") {
+    $handler = $view->style_plugin;
+
+    // Set Raw Values.
+    foreach ($variables['rows'] as $index => &$row) {
+      foreach ($row['columns'] as $field => &$field_data) {
+        $raw_value = $handler->getFieldValue($index, $field);
+        $row['columns'][$field]['raw'] = $raw_value;
+      }
+    }
+
+    $fields_to_check = [
+      'field_ttfb_f',
+      'field_start_render_f',
+      'field_fcp_f',
+      'field_speed_index_f',
+      'field_lcp_f',
+      'field_cls_f',
+      'field_tbt_f',
+      'field_total_bytes_f',
+    ];
+
+    // Set classes.
+    foreach ($variables['rows'] as $index => &$row) {
+      foreach ($row['columns'] as $field => &$field_data) {
+        if (in_array($field, $fields_to_check)) {
+          $cur_val = (float) $field_data['raw'];
+
+          if ($index < (count($variables['rows']) - 1)) {
+            $prev_val = $variables['rows'][($index + 1)]['columns'][$field]['raw'];
+            if ($cur_val > $prev_val) {
+              $field_data['attributes']->addClass("val-rising");
+            }
+            elseif ($cur_val < $prev_val) {
+              $field_data['attributes']->addClass("val-falling");
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_result().
+ */
+function esm_test_wpt_preprocess_result(&$variables) {
+
+  $result = $variables['elements']['#result'];
+  $view_mode = $variables['elements']['#view_mode'];
+
+  if ($result->bundle() == "wpt_test_result" && $view_mode == "full") {
+    // Attach Library.
+    $variables['libraries']['#attached']['library'][] = "esm_test_wpt/wpt_results";
+
+    if ($file = $result->field_wpt_json_report->entity) {
+      $file_system = \Drupal::service('file_system');
+      $realpath = $file_system->realpath($file->getFileUri());
+
+      $contents = json_decode(file_get_contents($realpath));
+
+      // Render Location / Browser.
+      $variables['location_str'] = Markup::Create($contents->data->location);
+      $variables['from_str'] = Markup::create($contents->data->from);
+      $variables['browser_str'] = $contents->data->runs->{'1'}->firstView->browser_name;
+
+      // Render link to Report.
+      if ($contents->data->summary) {
+        $url = Url::fromUri($contents->data->summary, ['attributes' => ['target' => '_blank']]);
+        $link = Link::fromTextAndUrl("Web Page Test full report", $url);
+
+        $variables['report_link'] = $link->toRenderable();
+      }
+
+      // First View Waterfall Image.
+      $variables['first_view_waterfull_url'] = $contents->data->median->firstView->images->waterfall;
+
+      // Repeat  View Waterfall Image.
+      if (isset($contents->data->median->repeatView->images->waterfall)) {
+        $variables['repeat_view_waterfull_url'] = $contents->data->median->repeatView->images->waterfall;
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave().
+ */
+function esm_test_wpt_result_presave($entity) {
+  esm_test_wpt_update_result($entity);
+}
+
+/**
+ * Update the Result entity based on saved json Report.
+ */
+function esm_test_wpt_update_result($entity) {
+  if ($entity->bundle() == "wpt_test_result") {
+
+    // Set fields based off of data file.
+    if ($file = $entity->field_wpt_json_report->entity) {
+      $file_system = \Drupal::service('file_system');
+      $realpath = $file_system->realpath($file->getFileUri());
+
+      $contents = json_decode(file_get_contents($realpath));
+
+      $entity->field_url = $contents->data->url;
+
+      $entity->field_ttfb_f = $contents->data->median->firstView->TTFB;
+      $entity->field_start_render_f = $contents->data->median->firstView->render;
+      $entity->field_fcp_f = $contents->data->median->firstView->firstContentfulPaint;
+      $entity->field_speed_index_f = $contents->data->median->firstView->SpeedIndex;
+      if (isset($contents->data->median->firstView->{'chromeUserTiming.firstContentfulPaint'})) {
+        $entity->field_lcp_f = $contents->data->median->firstView->{'chromeUserTiming.firstContentfulPaint'};
+      }
+      if (isset($contents->data->median->firstView->{'chromeUserTiming.CumulativeLayoutShift'})) {
+        $entity->field_cls_f = $contents->data->median->firstView->{'chromeUserTiming.CumulativeLayoutShift'};
+      }
+      $entity->field_tbt_f = $contents->data->median->firstView->TotalBlockingTime;
+      $entity->field_total_bytes_f = $contents->data->median->firstView->bytesInDoc;
+
+      if (isset($contents->data->median->repeatView)) {
+        $entity->field_ttfb_r = $contents->data->median->repeatView->TTFB;
+        $entity->field_start_render_r = $contents->data->median->repeatView->render;
+        $entity->field_fcp_r = $contents->data->median->repeatView->firstContentfulPaint;
+        $entity->field_speed_index_r = $contents->data->median->repeatView->SpeedIndex;
+        if (isset($contents->data->median->repeatView->{'chromeUserTiming.firstContentfulPaint'})) {
+          $entity->field_lcp_r = $contents->data->median->repeatView->{'chromeUserTiming.firstContentfulPaint'};
+        }
+        if (isset($contents->data->median->repeatView->{'chromeUserTiming.CumulativeLayoutShift'})) {
+          $entity->field_cls_r = $contents->data->median->repeatView->{'chromeUserTiming.CumulativeLayoutShift'};
+        }
+        $entity->field_tbt_r = $contents->data->median->repeatView->TotalBlockingTime;
+        $entity->field_total_bytes_r = $contents->data->median->repeatView->bytesInDoc;
+      }
+    }
+
+    // Make sure data file is in the correct folder.
+    if ($file) {
+
+      $config_fact = \Drupal::service('config.factory');
+      $config = $config_fact->get('esm_test_wpt.settings');
+
+      // Set Time for this report.
+      $timestamp = $entity->getCreatedTime();
+
+      // Prepare Directory.
+      $target_dir = $config->get('dir') . "/" . $timestamp;
+
+      //@todo: should thi be: $file->getFilename;
+      $target = $target_dir . "/" . "jsonReport.json";
+
+      if ($file->getFileUri() !== $target) {
+        \Drupal::service('file_system')->prepareDirectory($target_dir, FileSystemInterface::CREATE_DIRECTORY);
+        \Drupal::service('file.repository')->move($file, $target);
+      }
+    }
+  }
+
+}

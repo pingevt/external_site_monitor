@@ -1,0 +1,11 @@
+entity.site.settings:
+  title: Site
+  description: Configure a Site entity type
+  route_name:  entity.site.settings
+  parent: system.admin_structure
+entity.site.collection:
+  title: Site Monitor
+  description: List of sites
+  route_name: entity.site.collection
+  parent: system.admin
+  weight: -10

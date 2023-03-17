@@ -1,0 +1,5 @@
+dir: 'public://tag-checker-reports'
+dependencies:
+  enforced:
+    module:
+      - esm_test_tag_checker

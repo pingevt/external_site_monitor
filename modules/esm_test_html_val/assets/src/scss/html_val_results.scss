@@ -1,0 +1,99 @@
+td.val-rising span,
+td.val-falling span {
+  position: relative;
+
+  &::after {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 0px;
+    height: 0px;
+    top: 50%;
+    right: -2rem;
+    transform: translate(0, -50%);
+    border: 8px solid transparent;
+  }
+}
+
+td.val-rising span::after {
+  border-top: 0px solid transparent;
+  border-bottom: 8px solid var(--esm-c-error-dark);;
+}
+
+td.val-falling span::after {
+  border-top: 8px solid var(--esm-c-success-dark);;
+  border-bottom: 0px solid transparent;
+}
+
+/**
+ * Message on Detail Page
+ */
+.ws-message--container.item-list {
+  margin-top: 4rem;
+  padding: 1rem;
+  background: #efefef;
+  border-radius: 6px;
+
+  h3 {
+    font-size: 1rem;
+  }
+
+  .ws-message--list {
+    margin: 0;
+
+    li {
+      margin-bottom: 1.5rem;
+    }
+  }
+}
+
+.ws-message {
+  padding: 0.5rem;
+  background: #ffffff;
+  border: 1px solid #666;
+  border-radius: 6px;
+
+  div:first-child {
+    font-weight: 700;
+  }
+
+  div:nth-child(2) {
+    margin: 0.5rem 0;
+  }
+
+  span.severity {
+    padding: 0.25rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+
+    font-weight: 700;
+  }
+
+  &.ws-message--info {
+    span.severity {
+      background: var(--esm-info-bg-color);
+    }
+  }
+
+  &.ws-message--warning {
+    span.severity {
+      background: var(--esm-warning-bg-color);
+    }
+  }
+
+  &.ws-message--error
+  &.ws-message--io,
+  &.ws-message--fatal,
+  &.ws-message--schema,
+  &.ws-message--internal {
+    span.severity {
+      background: var(--esm-error-bg-color);
+    }
+  }
+
+  code b {
+    color: var(--esm-highlight-text);
+    background-color: var(--esm-highlight-bg);
+    font-weight: 400;
+  }
+}

@@ -1,0 +1,4 @@
+services:
+  plugin.manager.esm_test_runner:
+    class: Drupal\esm_test_base\Plugin\EsmTestRunnerManager
+    parent: default_plugin_manager

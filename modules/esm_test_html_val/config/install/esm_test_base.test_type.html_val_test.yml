@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - esm_test_html_val
+id: html_val_test
+label: 'HTML Validation Test'

@@ -1,0 +1,11 @@
+entity.result_type.collection:
+  title: 'Result types'
+  parent: system.admin_structure
+  description: 'Manage and CRUD actions on Result type.'
+  route_name: entity.result_type.collection
+entity.result.collection:
+  title: Test Results
+  description: List of Test RTesults
+  route_name: entity.result.collection
+  parent: entity.site.collection
+  weight: 100

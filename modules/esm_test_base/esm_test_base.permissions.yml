@@ -1,0 +1,14 @@
+administer test types:
+  title: 'Administer test types'
+  description: 'Maintain the types of test entity.'
+  restrict access: true
+access test overview:
+  title: 'Access test overview page'
+delete test:
+  title: Delete test
+create test:
+  title: Create test
+view test:
+  title: View test
+edit test:
+  title: Edit test

@@ -1,0 +1,27 @@
+{#
+/**
+ * @file
+ * Default theme implementation to present a test entity.
+ *
+ * This template is used when viewing a registered test's page,
+ * e.g., /admin/content/test)/123. 123 being the test's ID.
+ *
+ * Available variables:
+ * - content: A list of content items. Use 'content' to print all content, or
+ *   print a subset such as 'content.title'.
+ * - attributes: HTML attributes for the container element.
+ *
+ * @see template_preprocess_test()
+ */
+#}
+<article{{ attributes }}>
+  {% if content %}
+    {{- content -}}
+  {% endif %}
+
+  <div class="schedule-visual">
+    <div class="week-split"></div>
+    <div class="noon"></div>
+    {{ period_render }}
+  </div>
+</article>

@@ -1,0 +1,111 @@
+<?php
+
+/**
+ * @file
+ * Handle functions and hooks for the lighthouse tests.
+ */
+
+use Drupal\Core\Template\Attribute;
+
+/**
+ * Implements hook_theme().
+ */
+function esm_test_lighthouse_theme() {
+  return [
+    'site_test_results__lighthouse_test' => [
+      'variables' => [
+        'test' => NULL,
+        'title' => "",
+        'content' => [],
+      ],
+      // 'template' => 'site-test-results--lighthouse-test',
+      'base hook' => 'site_test_results',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_preprocess_THEME().
+ */
+function esm_test_lighthouse_preprocess_site_test_results__lighthouse_test(&$variables) {
+
+  foreach ($variables['content']['data'] as &$url_group) {
+    if (isset($url_group['#attributes'])) {
+      $url_group['attributes'] = new Attribute($url_group['#attributes']);
+    }
+    else {
+      $url_group['attributes'] = new Attribute();
+    }
+
+    foreach ($url_group['group'] as &$table_grp) {
+      if (isset($table_grp['#attributes'])) {
+        $table_grp['attributes'] = new Attribute($table_grp['#attributes']);
+      }
+      else {
+        $table_grp['attributes'] = new Attribute();
+      }
+    }
+  }
+
+  // Add in libraries.
+  $variables['libraries']['#attached']['library'][] = 'esm_test_lighthouse/test_lightouse';
+}
+
+/**
+ * Implements hook_preprocess_views_view_table().
+ */
+function esm_test_lighthouse_preprocess_views_view_table(&$variables) {
+  $view = $variables['view'];
+
+  if ($view->id() == "lighthouse_test_result" && $view->getDisplay()->display['id'] == "base") {
+    $handler = $view->style_plugin;
+
+    // Set Raw Values.
+    foreach ($variables['rows'] as $index => &$row) {
+      foreach ($row['columns'] as $field => &$field_data) {
+        $raw_value = $handler->getFieldValue($index, $field);
+        $row['columns'][$field]['raw'] = $raw_value;
+      }
+    }
+
+    $fields_to_check = [
+      "field_performance",
+      "field_best_practices",
+      "field_accessibility",
+      "field_seo",
+      "field_pwa",
+    ];
+
+    // Set classes.
+    foreach ($variables['rows'] as $index => &$row) {
+      foreach ($row['columns'] as $field => &$field_data) {
+        if (in_array($field, $fields_to_check)) {
+          $cur_val = (float) $field_data['raw'];
+
+          if ($cur_val < 0.5) {
+            $field_data['attributes']->addClass("val-x-low");
+          }
+          elseif ($cur_val < 0.85) {
+            $field_data['attributes']->addClass("val-low");
+          }
+          elseif ($cur_val >= 0.92) {
+            $field_data['attributes']->addClass("val-high");
+          }
+          else {
+            $field_data['attributes']->addClass("val-acceptable");
+          }
+
+          if ($index < (count($variables['rows']) - 1)) {
+            $prev_val = $variables['rows'][($index + 1)]['columns'][$field]['raw'];
+            if ($cur_val > $prev_val) {
+              $field_data['attributes']->addClass("val-rising");
+            }
+            elseif ($cur_val < $prev_val) {
+              $field_data['attributes']->addClass("val-falling");
+            }
+          }
+        }
+      }
+    }
+  }
+}

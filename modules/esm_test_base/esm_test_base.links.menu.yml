@@ -1,0 +1,10 @@
+entity.test_type.collection:
+  title: 'Test types'
+  parent: system.admin_structure
+  description: 'Manage and CRUD actions on Test type.'
+  route_name: entity.test_type.collection
+entity.test.collection:
+  title: Tests
+  description: List of Tests
+  route_name: entity.test.collection
+  parent: entity.site.collection

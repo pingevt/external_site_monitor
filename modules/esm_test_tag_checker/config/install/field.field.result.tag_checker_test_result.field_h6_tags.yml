@@ -1,0 +1,25 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - esm_test_result_base.result_type.tag_checker_test_result
+    - field.storage.result.field_h6_tags
+  enforced:
+    module:
+      - esm_test_tag_checker
+id: result.tag_checker_test_result.field_h6_tags
+field_name: field_h6_tags
+entity_type: result
+bundle: tag_checker_test_result
+label: 'H6 Tags'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

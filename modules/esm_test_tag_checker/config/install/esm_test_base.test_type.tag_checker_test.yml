@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - esm_test_tag_checker
+_core:
+  default_config_hash: Yk2Ph1742qvAPB-suKRV4XytSVZs7J9G_I8kx55DfI4
+id: tag_checker_test
+label: 'Tag Checker Test'

@@ -1,0 +1,10 @@
+tag_checker_results:
+  version: VERSION
+  css:
+    layout:
+      assets/dist/css/tag_checker_results.css: {}
+  js:
+    assets/dist/js/tag_checker_results.js: {}
+  dependencies:
+    - esm_test_base/tests
+

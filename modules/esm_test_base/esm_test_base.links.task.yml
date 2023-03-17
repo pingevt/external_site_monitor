@@ -1,0 +1,57 @@
+entity.test.view:
+  title: View
+  route_name: entity.test.canonical
+  base_route: entity.test.canonical
+entity.test.edit_form:
+  title: Edit
+  route_name: entity.test.edit_form
+  base_route: entity.test.canonical
+entity.test.delete_form:
+  title: Delete
+  route_name: entity.test.delete_form
+  base_route: entity.test.canonical
+  weight: 10
+entity.test.run_test_now:
+  title: Run Now
+  route_name: entity.test.run_test_now
+  base_route: entity.test.canonical
+  weight: 20
+entity.test.collection:
+  title: Tests
+  route_name: entity.test.collection
+  base_route: entity.site.collection
+  weight: 10
+entity.test_type.edit_form:
+  title: Edit
+  route_name: entity.test_type.edit_form
+  base_route: entity.test_type.edit_form
+entity.test_type.collection:
+  title: List
+  route_name: entity.test_type.collection
+  base_route: entity.test_type.collection
+
+# Tab for Tests on Site admin pages.
+entity.site.tests:
+  title: Tests
+  route_name: site.tests
+  base_route: entity.site.canonical
+  weight: 99
+
+# site.test_results:
+#   title: Tests Result
+#   route_name: site.test_results
+#   # base_route: entity.site.canonical
+#   parent_id: entity.site.tests
+#   weight: 99
+
+test.test_results:
+  title: Test Results
+  route_name: test.test_results
+  base_route: entity.test.canonical
+  weight: 19
+
+# Tabs for test Results.
+# entity.sites.test_results:
+#   deriver: 'Drupal\esm_test_base\Plugin\Derivative\DynamicLocalTasks'
+#   weight: 100
+

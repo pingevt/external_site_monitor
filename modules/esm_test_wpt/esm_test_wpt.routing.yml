@@ -1,0 +1,7 @@
+esm_test_wpt.wpt_test_settings:
+  path: '/admin/config/esm/wpt-test-settings'
+  defaults:
+    _title: 'WPT settings'
+    _form: 'Drupal\esm_test_wpt\Form\WptTestSettingsForm'
+  requirements:
+    _permission: 'administer site configuration'

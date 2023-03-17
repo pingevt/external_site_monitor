@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - esm_test_result_base.result_type.blc_test_result
+    - field.storage.result.field_blc_status
+  enforced:
+    module:
+      - esm_test_blc
+id: result.blc_test_result.field_blc_status
+field_name: field_blc_status
+entity_type: result
+bundle: blc_test_result
+label: Status
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

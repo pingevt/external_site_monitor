@@ -1,0 +1,7 @@
+external_site_monitor.admin_config:
+  path: '/admin/config/esm'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'External Site Monitor Config'
+  requirements:
+    _permission: 'access administration pages'

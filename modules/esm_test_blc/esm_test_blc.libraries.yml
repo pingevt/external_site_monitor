@@ -1,0 +1,7 @@
+blc_results:
+  version: VERSION
+  css:
+    layout:
+      assets/dist/css/blc_results.css: {}
+  dependencies:
+    - external_site_monitor/esm_base

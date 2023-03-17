@@ -1,0 +1,5 @@
+esm_test_wpt.wpt_test_settings:
+  title: Web Page Test Settings
+  parent: external_site_monitor.admin_config
+  route_name: esm_test_wpt.wpt_test_settings
+  weight: 13

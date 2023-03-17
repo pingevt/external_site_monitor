@@ -1,0 +1,13 @@
+site.add_form:
+  route_name: entity.site.add_form
+  title: 'Add site'
+  appears_on:
+    - entity.site.collection
+
+site.add_test:
+  route_name: entity.test.add_page
+  title: 'Add test'
+  appears_on:
+    # - entity.site.collection
+    # - entity.site.canonical
+    - site.tests

@@ -1,0 +1,11 @@
+name: 'External Site Monitor: HTML Validator'
+type: module
+description: 'Provides tests for HTML validation using W3.org checker'
+package: External Site Monitor
+core: 8.x
+core_version_requirement: ^8 || ^9
+dependencies:
+  - esm_test_base
+  - esm_test_result_base
+
+configure: esm_test_html_val.html_val_test_settings

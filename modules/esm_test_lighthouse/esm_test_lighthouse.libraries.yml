@@ -1,0 +1,7 @@
+test_lightouse:
+  version: VERSION
+  css:
+    layout:
+      assets/dist/css/lighthouse_results.css: {}
+  dependencies:
+    - external_site_monitor/esm_base

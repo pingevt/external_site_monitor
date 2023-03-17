@@ -1,0 +1,17 @@
+esm_test_lighthouse.lighthouse_test_settings:
+  path: '/admin/config/esm/lighthouse-test-settings'
+  defaults:
+    _title: 'Lighthouse test settings'
+    _form: 'Drupal\esm_test_lighthouse\Form\LighthouseTestSettingsForm'
+  requirements:
+    _permission: 'administer site configuration'
+
+esm_test_lighthouse.lighthouse_results:
+  path: /api/lighthouse-report-results
+  defaults:
+    _controller: '\Drupal\esm_test_lighthouse\Controller\Api::lighthouseResults'
+  methods: [POST]
+  requirements:
+    _permission: "use esm api"
+  options:
+    _auth: [ 'key_auth' ]

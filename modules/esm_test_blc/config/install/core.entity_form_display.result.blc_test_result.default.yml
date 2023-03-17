@@ -1,0 +1,99 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - esm_test_result_base.result_type.blc_test_result
+    - field.field.result.blc_test_result.field_blc_cron_runs
+    - field.field.result.blc_test_result.field_blc_json_data
+    - field.field.result.blc_test_result.field_blc_link_count
+    - field.field.result.blc_test_result.field_blc_page_count
+    - field.field.result.blc_test_result.field_blc_problem_link_count
+    - field.field.result.blc_test_result.field_blc_status
+    - field.field.result.blc_test_result.field_url
+  module:
+    - file
+    - link
+  enforced:
+    module:
+      - esm_test_blc
+id: result.blc_test_result.default
+targetEntityType: result
+bundle: blc_test_result
+mode: default
+content:
+  created:
+    type: datetime_timestamp
+    weight: 20
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_blc_cron_runs:
+    type: number
+    weight: 27
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  field_blc_json_data:
+    type: file_generic
+    weight: 22
+    region: content
+    settings:
+      progress_indicator: throbber
+    third_party_settings: {  }
+  field_blc_link_count:
+    type: number
+    weight: 25
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  field_blc_page_count:
+    type: number
+    weight: 24
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  field_blc_problem_link_count:
+    type: number
+    weight: 26
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  field_blc_status:
+    type: string_textfield
+    weight: 23
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_url:
+    type: link_default
+    weight: 21
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+  test:
+    type: entity_reference_autocomplete
+    weight: 15
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  title:
+    type: string_textfield
+    weight: -5
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden: {  }

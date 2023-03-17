@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - esm_test_blc
+id: blc_test
+label: 'Broken Link Checker'

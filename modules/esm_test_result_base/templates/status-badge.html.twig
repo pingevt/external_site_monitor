@@ -1,0 +1,8 @@
+<div {{ attributes }} >
+  <div {{ title_attributes }} >{{ badge.badge_data.label }}</div>
+  <ul>
+  {% for item in badge.badge_data.items %}
+    <li {{ item.attributes }}>{{ item.text }}</li>
+  {% endfor %}
+  </ul>
+</div>

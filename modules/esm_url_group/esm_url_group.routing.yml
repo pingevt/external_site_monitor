@@ -1,0 +1,7 @@
+entity.url_group.settings:
+  path: 'admin/structure/url-group'
+  defaults:
+    _form: '\Drupal\esm_url_group\Form\UrlGroupSettingsForm'
+    _title: 'Url Group'
+  requirements:
+    _permission: 'administer url group'

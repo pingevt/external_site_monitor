@@ -1,0 +1,11 @@
+entity.url_group.settings:
+  title: Url Group
+  description: Configure an Url Group entity type
+  route_name:  entity.url_group.settings
+  parent: system.admin_structure
+entity.url_group.collection:
+  title: Url Groups
+  description: List of url groups
+  route_name: entity.url_group.collection
+  parent: entity.site.collection
+  weight: 101

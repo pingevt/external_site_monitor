@@ -1,0 +1,7 @@
+esm_test_blc.blc_test_settings:
+  path: '/admin/config/esm/blc-test-settings'
+  defaults:
+    _title: 'HTML Validation test settings'
+    _form: 'Drupal\esm_test_blc\Form\BlcTestSettingsForm'
+  requirements:
+    _permission: 'administer site configuration'

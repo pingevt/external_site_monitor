@@ -1,0 +1,63 @@
+:root {
+  --esm-c-red: #ff0000;
+  --esm-c-green: #008000;
+  --esm-c-black: #232429;
+  --esm-c-black: #232429;
+  --esm-c-white: #ffffff;
+  --esm-c-gray-5: hsl(0, 0%, 95%);
+  --esm-c-gray-10: hsl(0, 0%, 90%);
+  --esm-c-gray-15: hsl(0, 0%, 85%);
+  --esm-c-gray-20: hsl(0, 0%, 80%);
+  --esm-c-gray-25: hsl(0, 0%, 75%);
+  --esm-c-gray-30: hsl(0, 0%, 70%);
+  --esm-c-gray-35: hsl(0, 0%, 65%);
+  --esm-c-gray-40: hsl(0, 0%, 60%);
+  --esm-c-gray-45: hsl(0, 0%, 55%);
+  --esm-c-gray-50: hsl(0, 0%, 50%);
+  --esm-c-error-main: #d32f2f;
+  --esm-c-error-light: #ef5350;
+  --esm-c-error-lightest: hsl(0, 65%, 90%);
+  --esm-c-error-dark: #c62828;
+  --esm-c-warning-main: #ffa500;
+  --esm-c-warning-light: #f5bb4f;
+  --esm-c-warning-lightest: hsl(39, 100%, 90%);
+  --esm-c-warning-dark: #e65100;
+  --esm-c-info-main: #0288d1;
+  --esm-c-info-light: #03a9f4;
+  --esm-c-info-lightest: hsl(201, 98%, 90%);
+  --esm-c-info-dark: #01579b;
+  --esm-c-success-main: #2e7d32;
+  --esm-c-success-light: #4caf50;
+  --esm-c-success-lightest: hsl(123, 46%, 90%);
+  --esm-c-success-dark: #1b5e20;
+  --esm-error-text-color: var(--esm-c-error-main);
+  --esm-error-bg-color: var(--esm-c-error-lightest);
+  --esm-error-border-color: var(--esm-c-error-dark);
+  --esm-warning-text-color: var(--esm-c-warning-main);
+  --esm-warning-bg-color: var(--esm-c-warning-lightest);
+  --esm-warning-border-color: var(--esm-c-warning-dark);
+  --esm-info-text-color: var(--esm-c-info-main);
+  --esm-info-bg-color: var(--esm-c-info-lightest);
+  --esm-info-border-color: var(--esm-c-info-light);
+  --esm-success-text-color: var(--esm-c-success-main);
+  --esm-success-bg-color: var(--esm-c-success-lightest);
+  --esm-success-border-color: var(--esm-c-success-dark);
+  --esm-highlight-bg: #ffff80;
+  --esm-highlight-text: var(--esm-c-black);
+  --mq--xs: (min-width: 480px);
+  --mq--xs-sm: (min-width: 620px);
+  --mq--sm: (min-width: 750px);
+  --mq--sm-md: (min-width: 950px);
+  --mq--nav-break: (min-width: 1000px);
+  --mq--md: (min-width: 1100px);
+  --mq--lg: (min-width: 1280px);
+  --mq--xl: (min-width: 1728px); }
+
+.toolbar-icon-entity-site-collection:before {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3e%3cg%3e%3cpath fill='%23787878' d='M4 13.529c0 .275-.225.5-.5.5h-3c-.275 0-.5-.225-.5-.5v-4.25c0-.274.225-.5.5-.5h3c.275 0 .5.226.5.5v4.25zM10.002 13.529c0 .275-.225.5-.5.5h-3.002c-.275 0-.5-.225-.5-.5v-13c0-.275.225-.5.5-.5h3.002c.275 0 .5.225.5.5v13zM16.002 13.529c0 .275-.225.5-.5.5h-3c-.275 0-.5-.225-.5-.5v-9.5c0-.275.225-.5.5-.5h3c.275 0 .5.225.5.5v9.5z'/%3e%3c/g%3e%3c/svg%3e"); }
+
+.toolbar-icon-entity-site-collection:active:before,
+.toolbar-icon-entity-site-collection.is-active:before {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3e%3cg%3e%3cpath fill='%23000000' d='M4 13.529c0 .275-.225.5-.5.5h-3c-.275 0-.5-.225-.5-.5v-4.25c0-.274.225-.5.5-.5h3c.275 0 .5.226.5.5v4.25zM10.002 13.529c0 .275-.225.5-.5.5h-3.002c-.275 0-.5-.225-.5-.5v-13c0-.275.225-.5.5-.5h3.002c.275 0 .5.225.5.5v13zM16.002 13.529c0 .275-.225.5-.5.5h-3c-.275 0-.5-.225-.5-.5v-9.5c0-.275.225-.5.5-.5h3c.275 0 .5.225.5.5v9.5z'/%3e%3c/g%3e%3c/svg%3e"); }
+
+/*# sourceMappingURL=esm_base.css.map */

@@ -1,0 +1,5 @@
+esm_test_tag_checker.tag_checker_test_settings:
+  title: HTML Tag Checker settings
+  parent: external_site_monitor.admin_config
+  route_name: esm_test_tag_checker.tag_checker_test_settings
+  weight: 12

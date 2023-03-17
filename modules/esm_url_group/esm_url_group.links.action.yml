@@ -1,0 +1,5 @@
+url_group.add_form:
+  route_name: entity.url_group.add_form
+  title: 'Add url group'
+  appears_on:
+    - entity.url_group.collection

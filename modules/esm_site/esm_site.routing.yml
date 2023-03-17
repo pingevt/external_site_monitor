@@ -1,0 +1,7 @@
+entity.site.settings:
+  path: 'admin/structure/site'
+  defaults:
+    _form: '\Drupal\esm_site\Form\SiteSettingsForm'
+    _title: 'Ext. Site Monitor'
+  requirements:
+    _permission: 'administer site'

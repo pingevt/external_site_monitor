@@ -1,0 +1,4 @@
+services:
+  esm_test_blc.sitemap_crawler:
+    class: Drupal\esm_test_blc\SiteCrawler
+    arguments: ['@file_system']

@@ -1,0 +1,241 @@
+<?php
+
+/**
+ * @file
+ * Functions and hooks for hanling the tag checker test.
+ */
+
+use Drupal\Core\Logger\RfcLogLevel;
+use Drupal\Core\Queue\SuspendQueueException;
+use Drupal\Core\Render\Markup;
+use Drupal\Core\Template\Attribute;
+use Drupal\Core\Utility\Error;
+use Drupal\esm_test_blc\Link;
+use Drupal\esm_test_blc\SiteCrawlerController;
+use Drupal\esm_test_result_base\Entity\Result;
+
+/**
+ * Implements hook_theme().
+ */
+function esm_test_blc_theme() {
+  return [
+    'site_test_results__blc_test' => [
+      'variables' => [
+        'test' => NULL,
+        'title' => "",
+        'content' => [],
+      ],
+      'base hook' => 'site_test_results',
+    ],
+    'result__blc_test_result' => [
+      'base hook' => 'result',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_preprocess_THEME().
+ */
+function esm_test_blc_preprocess_site_test_results__blc_test(&$variables) {
+
+  // foreach ($variables['content']['data'] as &$url_group) {
+  //   if (isset($url_group['#attributes'])) {
+  //     $url_group['attributes'] = new Attribute($url_group['#attributes']);
+  //   }
+  //   else {
+  //     $url_group['attributes'] = new Attribute();
+  //   }
+
+  //   foreach ($url_group['group'] as &$table_grp) {
+  //     if (isset($table_grp['#attributes'])) {
+  //       $table_grp['attributes'] = new Attribute($table_grp['#attributes']);
+  //     }
+  //     else {
+  //       $table_grp['attributes'] = new Attribute();
+  //     }
+  //   }
+  // }
+
+  // Add in libraries.
+  // $variables['libraries']['#attached']['library'][] = 'esm_test_blc/blc_results';
+}
+
+/**
+ * Implements hook_preprocess_views_view_table().
+ */
+function esm_test_blc_preprocess_views_view_table(&$variables) {
+  $view = $variables['view'];
+
+  // if ($view->id() == "blc_test_results" && $view->getDisplay()->display['id'] == "base") {
+  //   $handler = $view->style_plugin;
+
+  //   // Set Raw Values.
+  //   foreach ($variables['rows'] as $index => &$row) {
+  //     foreach ($row['columns'] as $field => &$field_data) {
+  //       $raw_value = $handler->getFieldValue($index, $field);
+  //       $row['columns'][$field]['raw'] = $raw_value;
+  //     }
+  //   }
+
+  //   $fields_to_check = [
+  //     // "field_h1_tags",
+  //   ];
+
+  //   // Set classes.
+  //   foreach ($variables['rows'] as $index => &$row) {
+  //     foreach ($row['columns'] as $field => &$field_data) {
+  //       if (in_array($field, $fields_to_check)) {
+  //         $cur_val = (float) $field_data['raw'];
+
+  //         if ($cur_val <= 0 || $cur_val >= 2) {
+  //           $field_data['attributes']->addClass("val-error");
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
+}
+
+/**
+ * Implements hook_preprocess_result().
+ */
+function esm_test_blc_preprocess_result(&$variables) {
+
+  $result = $variables['elements']['#result'];
+  $view_mode = $variables['elements']['#view_mode'];
+
+  if ($result->bundle() == "blc_test_result" && $view_mode == "full") {
+    // Attach Library.
+    $variables['content']['#attached']['library'][] = "esm_test_blc/blc_results";
+
+    $controller = SiteCrawlerController::create($result);
+
+    // Processed Links.
+    $variables['processed_link_count'] = $controller->getProcessedLinksCount();
+    $variables['all_link_count'] = $controller->getAllLinksCount();
+    if ($variables['all_link_count'] != 0) {
+      $variables['processed_link_count_perc'] = number_format((($variables['processed_link_count'] * 100) / $variables['all_link_count']), 3);
+    }
+    else {
+      $variables['processed_link_count_perc'] = 0;
+    }
+
+    // Problem Links.
+    $problem_links = $controller->getProblemLinks([
+      ["http_status", "ASC"],
+      ["full_url", "ASC"],
+    ]);
+
+    // ksm($problem_links);
+
+    $table = [
+      '#type' => "table",
+      '#caption' => "Problem Links",
+      '#attributes' => ['class' => ["blc-results-full"]],
+      '#header' => [
+        "#",
+        "Link",
+        "HTTP Status",
+        "Referrer",
+        "Redirected to:",
+      ],
+      '#rows' => [],
+      '#empty' => t('No content has been found.'),
+    ];
+
+    $page_count = 1;
+    foreach ($problem_links as $link) {
+      $parents_arr = array_reduce($link->data['parents'], function ($accumulator, $item) {
+        if (is_array($item)) {
+          $accumulator[] = $item[1];
+        }
+        else {
+          $accumulator[] = $item;
+        }
+
+        return $accumulator;
+      }, []);
+
+      $page_row = [
+        'class' => ["page-row"],
+        'data' => [
+          $page_count,
+          $link->full_url,
+          $link->http_status,
+          implode(", ", $parents_arr),
+          isset($link->data['redirect_loc']) ? $link->data['redirect_loc'] : "",
+        ],
+      ];
+
+      if ($link->http_status >= 300 && $link->http_status <= 399) {
+        $page_row['class'][] = "has-redirect";
+      }
+
+      if ($link->http_status >= 400 && $link->http_status <= 499) {
+        $page_row['class'][] = "has-error";
+      }
+
+      $table['#rows'][] = $page_row;
+
+      // Increment.
+      $page_count++;
+    }
+
+    $variables['link_table'] = $table;
+
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete().
+ */
+function esm_test_blc_result_delete(Result $result) {
+  // Delete BLC data when a result is deleted.
+  $delete = \Drupal::database()->delete("esm_blc_link");
+  $delete->condition('result', $result->id());
+  $c = $delete->execute();
+}
+
+/**
+ * Implemets hook_cron().
+ */
+function esm_test_blc_cron() {
+  $total = 1000;
+  $queue_id = "esm_test_blc.continue_tests";
+  $queue_factory = \Drupal::service('queue');
+  $queue = $queue_factory->get($queue_id);
+
+  $queue_manager = \Drupal::service('plugin.manager.queue_worker');
+  $queue_worker = $queue_manager->createInstance($queue_id);
+
+  $start = time();
+
+  // Run for 12 seconds or 10000 items.
+  $count = 1;
+  while ((time() - $start) < 12 && $count <= $total) {
+    $item = $queue->claimItem();
+    if ($item) {
+      try {
+        $queue_worker->processItem($item->data);
+        $queue->deleteItem($item);
+      }
+      catch (SuspendQueueException $e) {
+        $queue->releaseItem($item);
+        $variables = Error::decodeException($e);
+
+        \Drupal::logger('esm_test_blc')->log(RfcLogLevel::ERROR, t('error processing item from queue: SuspendQueueException', []), $variables);
+        break;
+      }
+      catch (\Exception $e) {
+        $variables = Error::decodeException($e);
+
+        \Drupal::logger('esm_test_blc')->log(RfcLogLevel::ERROR, t('error processing item from queue:', []), $variables);
+      }
+    }
+    else {
+      break;
+    }
+
+    $count++;
+  }
+}

@@ -1,0 +1,9 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - esm_test_wpt
+id: wpt_test
+label: 'WPT Test'
+allow_manual: true

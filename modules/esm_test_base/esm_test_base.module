@@ -1,0 +1,311 @@
+<?php
+
+/**
+ * @file
+ * Provides a test entity type.
+ */
+
+use Cron\CronExpression;
+use Drupal\Component\Utility\Html;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element;
+use Drupal\Core\Url;
+use Drupal\esm_test_base\Entity\Test;
+
+/**
+ * Implements hook_theme().
+ */
+function esm_test_base_theme() {
+  return [
+    'test' => [
+      'render element' => 'elements',
+    ],
+    'site_test_results' => [
+      'variables' => [
+        'test' => NULL,
+        'title' => "",
+        'content' => [],
+      ],
+      // 'template' => 'site-test-results',
+      'base hook' => 'site_test_results',
+    ],
+  ];
+}
+
+/**
+ * Prepares variables for test templates.
+ *
+ * Default template: test.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - elements: An associative array containing the test information and any
+ *     fields attached to the entity.
+ *   - attributes: HTML attributes for the containing element.
+ */
+function template_preprocess_test(array &$variables) {
+  foreach (Element::children($variables['elements']) as $key) {
+    $variables['content'][$key] = $variables['elements'][$key];
+  }
+
+  $test = $variables['elements']['#test'];
+  $variables['attributes']['class'][] = "test";
+  $variables['attributes']['class'][] = "test--type-" . Html::cleanCssIdentifier($test->bundle());
+  $variables['attributes']['class'][] = "test--view-mode-" . Html::cleanCssIdentifier($variables['elements']['#view_mode']);
+
+  $variables['content']['#attached']['library'][] = "esm_test_base/tests";
+
+  // Schedule Visual.
+
+  $day = date('w');
+  $week_start_str = date('m-d-Y', strtotime('-'.$day.' days'));
+
+  // ksm($day, $week_start_str);
+
+  $period_start = DateTime::createFromFormat("m-d-Y", $week_start_str);
+  $period_start->setTime(0, 0, 0, 0);
+  $period_end = clone $period_start;
+  $period_end->add(new DateInterval('P13D'));
+  $period_end->setTime(23, 59, 59);
+
+  // ksm($period_start, $period_end);
+
+  $expression = $test->schedule->value;
+  $cron = new CronExpression($expression);
+  // ksm($cron, $cron->getNextRunDate($period_start, 0, TRUE, NULL), $cron->getMultipleRunDates(14, $period_start, FALSE, TRUE, NULL));
+
+  $period_render = [];
+  $previous_run = clone $period_start;
+  $running = TRUE;
+  while ($running) {
+    $next_run = $cron->getNextRunDate($previous_run, 0, FALSE, NULL);
+    // ksm($next_run < $period_end);
+    if ($next_run < $period_end) {
+      $interval = $period_start->diff($next_run);
+      // ksm($next_run, $interval, $interval->days);
+      // ksm($next_run->format("H"), $next_run->format("i"));
+      $minutes = $next_run->format("H") * 60 + $next_run->format("i");
+      // ksm($minutes, ($minutes / 15));
+
+      $row = (int) ($minutes / 15) + 1;
+      $col = $interval->days + 1;
+      $period_render[$row . "--" . $col][] = [
+        '#type' => 'html_tag',
+        '#tag' => 'div',
+        '#attributes' => ['class' => ['visual-item', 'row-' . $row, 'col-' . $col]]
+      ];
+      $previous_run = clone $next_run;
+    }
+    else {
+      $running = FALSE;
+    }
+  }
+
+  foreach ($period_render as &$cell) {
+    if (count($cell) > 1) {
+      foreach ($cell as $x => &$p) {
+        $p['#attributes']['class'][] = "offset-" . $x;
+      }
+    }
+  }
+
+  // ksm($period_render);
+  $variables['period_render'] = $period_render;
+}
+
+/**
+ * Prepares variables for test list for a site.
+ *
+ * Default template: site-test-results.html.twig.
+ */
+function template_preprocess_site_test_results(array &$variables) {
+
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter().
+ *
+ * Add views template suggestions.
+ *
+ * @inheritdoc
+ */
+function esm_test_base_theme_suggestions_site_test_results_alter(array &$suggestions, array $variables) {
+  $suggestions[] = $variables['theme_hook_original'] . "__" . $variables['test']->bundle();
+}
+
+/**
+ * Implements hook_cron().
+ */
+function esm_test_base_cron() {
+  // Plugin Manager.
+  $queue = \Drupal::service('queue')->get('esm_test_base.run_tests');
+
+  // Set site TZ.
+  $config = \Drupal::config('system.date');
+  $config_data_default_timezone = $config->get('timezone.default');
+  $siteTZ = new \DateTimezone($config_data_default_timezone);
+  $utcTZ = new \DateTimezone('UTC');
+  // @todo all this should be available for the whole suite.
+  $date_format = "Y-m-d\TH:i:s";
+
+  $database = \Drupal::service('database');
+
+  $selectQ = $database->select('test_field_data', 't');
+  $selectQ->fields('t', ['id', 'last_run']);
+  $selectQ->join('esm_test_schedule', 'e', 't.id = e.test_id');
+  $selectQ->fields('e', ['scheduled']);
+
+  $condition_group = $selectQ->orConditionGroup();
+  $condition_group->condition('t.last_run', 'e.scheduled', "<");
+  $condition_group->isNull('t.last_run');
+
+  $selectQ->condition($condition_group);
+
+  $selectQ->condition("status", TRUE);
+
+  $selectQ->orderBy("t.id", "ASC");
+  $selectQ->orderBy("e.scheduled", "ASC");
+
+  $results = $selectQ->execute()->fetchAll();
+
+  $now = new DateTime("now", $siteTZ);
+
+  foreach ($results as $result) {
+
+    $scheduled_date = new DateTime($result->scheduled, $utcTZ);
+
+    if ($scheduled_date < $now) {
+
+      $test = Test::load($result->id);
+      $queue_item = new \stdClass();
+      $queue_item->test_id = $test->id();
+      $queue->createItem($queue_item);
+    }
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function esm_test_base_test_insert($entity) {
+  // Update schedule helper table.
+  esm_test_base_update_future_schedule($entity);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update().
+ */
+function esm_test_base_test_update($entity) {
+  // Update schedule helper table.
+  esm_test_base_update_future_schedule($entity);
+}
+
+/**
+ * Updates the table for quick lookup of needed tests.
+ */
+function esm_test_base_update_future_schedule($entity) {
+  $database = \Drupal::service('database');
+
+  // Delete exisiting test.
+  $delete_q = $database->delete('esm_test_schedule');
+  $delete_q->condition('test_id', $entity->id());
+  $delete_q->execute();
+
+  $expression = $entity->schedule->value;
+
+  if (!$entity->schedule->isEmpty() && CronExpression::isValidExpression($expression)) {
+    // Add the next 1 instances.
+    // @todo do i need more instances?
+    // Set site TZ.
+    $config = \Drupal::config('system.date');
+    $config_data_default_timezone = $config->get('timezone.default');
+    $siteTZ = new \DateTimezone($config_data_default_timezone);
+    $utcTZ = new \DateTimezone('UTC');
+    $date_format = "Y-m-d\TH:i:s";
+
+    $last_run_date = NULL;
+    if ($entity->last_run->isEmpty()) {
+      $last_run_date = new DateTime("now", $siteTZ);
+    }
+    else {
+      $last_run_date = new DateTime($entity->last_run->value, $utcTZ);
+      // Add a minute to get proper schedule.
+      $last_run_date->add(new DateInterval("PT1M"));
+      $last_run_date->setTimezone($siteTZ);
+    }
+
+    $cron = new CronExpression($expression);
+
+    $upcoming_times = $cron->getMultipleRunDates(1, $last_run_date, FALSE, TRUE, $config_data_default_timezone);
+    $insertQuery = $database->insert('esm_test_schedule')->fields([
+      'test_id',
+      'scheduled',
+    ]);
+
+    foreach ($upcoming_times as $time) {
+      $time->setTimezone($utcTZ);
+
+      $insertQuery->values([
+        'test_id' => $entity->id(),
+        'scheduled' => $time->format($date_format),
+      ]);
+    }
+
+    $insertQuery->execute();
+
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function esm_test_base_form_views_exposed_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $view = $form_state->getStorage('view');
+
+  if ($view['view']->id() == "tests" && $view['display']['id'] == "page_1") {
+    $database = \Drupal::database();
+    $query = $database->select('site_field_data', 's');
+    $query->fields('s', ['id', 'title']);
+
+    $results = $query->execute();
+
+    $form['site']['#options'][''] = "- Any -";
+    foreach ($results->fetchAll() as $site) {
+      $form['site']['#options'][$site->id] = $site->title;
+    }
+
+    $form['site']['#type'] = "select";
+    $form['site']['#size'] = 1;
+    $form['site']['#multivalue'] = FALSE;
+  }
+}
+
+/**
+ * Implements hook_entity_operation().
+ */
+function esm_test_base_entity_operation(EntityInterface $entity) {
+  if ($entity->getEntityType()->id() == "test") {
+    $operations = [];
+
+    $operations['manage'] = [
+      'title' => t('Run Test'),
+      'url' => Url::fromRoute('entity.test.run_test_now', ['test' => $entity->id()]),
+      'weight' => 100,
+    ];
+
+    return $operations;
+  }
+
+  if ($entity->getEntityType()->id() == "site") {
+    $operations = [];
+
+    $operations['manage'] = [
+      'title' => t('Preview Tests'),
+      'url' => Url::fromRoute('site.tests', ['site' => $entity->id()]),
+      'weight' => 100,
+    ];
+
+    return $operations;
+  }
+}

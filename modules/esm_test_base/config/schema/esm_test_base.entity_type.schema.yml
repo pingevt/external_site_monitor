@@ -1,0 +1,15 @@
+esm_test_base.test_type.*:
+  type: config_entity
+  label: 'Test type config'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+    allow_manual:
+      type: boolean
+      label: 'Allow Manual'
+    uuid:
+      type: string

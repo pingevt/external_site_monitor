@@ -1,0 +1,33 @@
+{#
+/**
+ * @file
+ * Default theme implementation for a ae_core edit form.
+ *
+ * Two column template for the ae_core add/edit form.
+ *
+ * This template will be used when a ae_core edit form specifies 'ae_core_edit_form'
+ * as its #theme callback.  Otherwise, by default, ae_core add/edit forms will be
+ * themed by form.html.twig.
+ *
+ * Available variables:
+ * - form: The ae_core add/edit form.
+ *
+ * @see seven_form_ae_core_form_alter()
+ *
+ * @ingroup themeable
+ */
+#}
+<div class="layout-form clearfix">
+  <div class="layout-region layout-region-main">
+    {{ form|without('advanced', 'footer', 'actions') }}
+  </div>
+  <div class="layout-region layout-region-secondary">
+    {{ form.advanced }}
+  </div>
+  <div class="layout-region layout-region-footer">
+    <div class="layout-region-footer__content">
+      {{ form.footer }}
+      {{ form.actions }}
+    </div>
+  </div>
+</div>

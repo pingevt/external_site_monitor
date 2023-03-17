@@ -1,0 +1,28 @@
+<?php
+
+/**
+ * @file
+ * This module is the base modules for site testing.
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function external_site_monitor_theme() {
+  return [
+    'content_edit_form' => [
+      'render element' => 'form',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_page_attachments_alter().
+ */
+function external_site_monitor_page_attachments_alter(array &$page) {
+  // Attaches css assets globally.
+  $user = \Drupal::currentUser();
+  if ($user->hasPermission('access toolbar')) {
+    $page['#attached']['library'][] = 'external_site_monitor/esm_base';
+  }
+}

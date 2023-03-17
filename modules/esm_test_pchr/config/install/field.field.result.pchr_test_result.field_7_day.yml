@@ -1,0 +1,25 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - esm_test_result_base.result_type.pchr_test_result
+    - field.storage.result.field_7_day
+  enforced:
+    module:
+      - esm_test_pchr
+id: result.pchr_test_result.field_7_day
+field_name: field_7_day
+entity_type: result
+bundle: pchr_test_result
+label: '7 day running'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: '%'
+field_type: float

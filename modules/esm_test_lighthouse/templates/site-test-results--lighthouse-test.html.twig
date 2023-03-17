@@ -1,0 +1,14 @@
+<h1>{{ title }}</h1>
+
+<div class="o-url-results">
+{% for data in content.data %}
+
+  <div {{ data.attributes }}>
+  {% for group in data.group %}
+    <div {{ group.attributes }}>{{ group.view }}</div>
+  {% endfor %}
+  </div>
+{% endfor %}
+</div>
+
+{{ libraries }}

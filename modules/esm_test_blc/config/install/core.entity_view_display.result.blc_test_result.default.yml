@@ -1,0 +1,114 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - esm_test_result_base.result_type.blc_test_result
+    - field.field.result.blc_test_result.field_blc_cron_runs
+    - field.field.result.blc_test_result.field_blc_json_data
+    - field.field.result.blc_test_result.field_blc_link_count
+    - field.field.result.blc_test_result.field_blc_page_count
+    - field.field.result.blc_test_result.field_blc_problem_link_count
+    - field.field.result.blc_test_result.field_blc_status
+    - field.field.result.blc_test_result.field_url
+  module:
+    - file
+    - link
+  enforced:
+    module:
+      - esm_test_blc
+id: result.blc_test_result.default
+targetEntityType: result
+bundle: blc_test_result
+mode: default
+content:
+  created:
+    type: timestamp
+    label: above
+    settings:
+      date_format: medium
+      custom_date_format: ''
+      timezone: ''
+    third_party_settings: {  }
+    weight: 20
+    region: content
+  field_blc_cron_runs:
+    type: number_integer
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 27
+    region: content
+  field_blc_json_data:
+    type: file_default
+    label: above
+    settings:
+      use_description_as_link_text: true
+    third_party_settings: {  }
+    weight: 22
+    region: content
+  field_blc_link_count:
+    type: number_integer
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 25
+    region: content
+  field_blc_page_count:
+    type: number_integer
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 24
+    region: content
+  field_blc_problem_link_count:
+    type: number_integer
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 26
+    region: content
+  field_blc_status:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 23
+    region: content
+  field_url:
+    type: link
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    weight: 21
+    region: content
+  test:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 15
+    region: content
+  title:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: -5
+    region: content
+hidden: {  }

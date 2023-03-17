@@ -1,0 +1,11 @@
+name: 'External Site Monitor: Broken Link Checker'
+type: module
+description: 'Provides tests for Broken Link checker'
+package: External Site Monitor
+core: 8.x
+core_version_requirement: ^8 || ^9
+dependencies:
+  - esm_test_base
+  - esm_test_result_base
+
+configure: esm_test_blc.blc_test_settings

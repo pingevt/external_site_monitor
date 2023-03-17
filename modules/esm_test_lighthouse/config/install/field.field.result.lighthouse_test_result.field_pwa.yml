@@ -1,0 +1,25 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - esm_test_result_base.result_type.lighthouse_test_result
+    - field.storage.result.field_pwa
+  enforced:
+    module:
+      - esm_test_lighthouse
+id: result.lighthouse_test_result.field_pwa
+field_name: field_pwa
+entity_type: result
+bundle: lighthouse_test_result
+label: PWA
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: decimal

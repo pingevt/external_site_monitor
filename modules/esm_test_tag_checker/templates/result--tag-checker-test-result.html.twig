@@ -1,0 +1,47 @@
+<article{{ attributes }}>
+  {% if content %}
+    {{- content -}}
+
+    <hr>
+
+    <div class="small-table-wrapper">
+      {# ID table #}
+      <div class="id-table-wrapper">
+        <button id="id-table-toggle-btn">Toggle Rows</button>
+        {{ id_table }}
+      </div>
+
+      {# H table #}
+      <div class="h-table-wrapper">
+        {{ h_table }}
+      </div>
+    </div>
+
+    {% if title_tag %}
+    <div {{ title_tag_attrs.addClass("field field--label-above") }}>
+      <div class="field__label">Title Tag</div>
+
+      {% if title_tag|length > 1 %}<div class="field__items">{% endif %}
+      {% for title in title_tag %}
+        <div class="field__item">{{ title }}</div>
+      {% endfor %}
+      {% if title_tag|length > 1 %}</div>{% endif %}
+      </div>
+    {% endif %}
+
+    {# Meta Tag table #}
+    {{ meta_tag_table }}
+
+    {# Structured Data #}
+    {% if structured_data %}
+    <div {{ structured_data_attrs.addClass("field field--label-above") }}>
+      <div class="field__label">Structured Data</div>
+      <div class="field__item"><pre><code>{{ structured_data }}</code></pre></div>
+      {{ kint(structured_data) }}
+    </div>
+    {% endif %}
+
+  {% endif %}
+</article>
+
+

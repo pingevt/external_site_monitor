@@ -1,0 +1,44 @@
+<?php
+
+/**
+ * @file
+ * Un/Install functions.
+ */
+
+use Drupal\taxonomy\Entity\Term;
+
+/**
+ * Implements hook_install().
+ */
+function esm_site_install() {
+
+  $terms = [
+    'Higher Ed',
+    'Museum',
+    'Agency',
+    'Other',
+  ];
+
+  foreach ($terms as $i => $t) {
+    Term::create([
+      'name' => $t,
+      'vid' => 'site_type',
+      'weight' => $i,
+    ])->save();
+  }
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function esm_site_uninstall() {
+  $tids = \Drupal::entityQuery('taxonomy_term')
+    ->condition('vid', 'site_type')
+    ->execute();
+
+  $controller = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+  $entities = $controller->loadMultiple($tids);
+  // Delete all terms.
+  $controller->delete($entities);
+
+}

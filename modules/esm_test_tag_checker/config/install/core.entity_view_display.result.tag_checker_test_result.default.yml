@@ -1,0 +1,79 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - esm_test_result_base.result_type.tag_checker_test_result
+    - field.field.result.tag_checker_test_result.field_h1_tags
+    - field.field.result.tag_checker_test_result.field_h2_tags
+    - field.field.result.tag_checker_test_result.field_h3_tags
+    - field.field.result.tag_checker_test_result.field_h4_tags
+    - field.field.result.tag_checker_test_result.field_h5_tags
+    - field.field.result.tag_checker_test_result.field_h6_tags
+    - field.field.result.tag_checker_test_result.field_meta_tag_count
+    - field.field.result.tag_checker_test_result.field_tc_json_report
+    - field.field.result.tag_checker_test_result.field_url
+  module:
+    - file
+    - link
+  enforced:
+    module:
+      - esm_test_tag_checker
+id: result.tag_checker_test_result.default
+targetEntityType: result
+bundle: tag_checker_test_result
+mode: default
+content:
+  created:
+    type: timestamp
+    label: above
+    settings:
+      date_format: medium
+      custom_date_format: ''
+      timezone: ''
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_tc_json_report:
+    type: file_default
+    label: above
+    settings:
+      use_description_as_link_text: true
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_url:
+    type: link
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  test:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  title:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  field_h1_tags: true
+  field_h2_tags: true
+  field_h3_tags: true
+  field_h4_tags: true
+  field_h5_tags: true
+  field_h6_tags: true
+  field_meta_tag_count: true

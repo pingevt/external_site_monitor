@@ -1,0 +1,25 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - esm_test_result_base.result_type.html_val_test_result
+    - field.storage.result.field_info
+  enforced:
+    module:
+      - esm_test_html_val
+id: result.html_val_test_result.field_info
+field_name: field_info
+entity_type: result
+bundle: html_val_test_result
+label: 'Info Count'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

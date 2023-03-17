@@ -1,0 +1,12 @@
+esm_test_result_base.result_type.*:
+  type: config_entity
+  label: 'Result type config'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+    uuid:
+      type: string

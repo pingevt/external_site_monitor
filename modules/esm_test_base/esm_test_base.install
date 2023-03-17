@@ -1,0 +1,30 @@
+<?php
+
+/**
+ * @file
+ * Provides un/install functionality.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function esm_test_base_schema() {
+  $schema['esm_test_schedule'] = [
+    'description' => 'A table to store future test times',
+    'fields' => [
+      'test_id' => [
+        'description' => 'Holds the id value',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'scheduled' => [
+        'description' => 'Holds the name value',
+        'type' => 'varchar',
+        'length' => '20',
+        'not null' => TRUE,
+      ],
+    ],
+  ];
+  return $schema;
+}
