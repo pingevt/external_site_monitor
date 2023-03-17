@@ -1,0 +1,19 @@
+{
+  "name": "pingevt/external_site_monitor",
+  "description": "Drupal Module for running tests on external sites.",
+  "type": "drupal-module",
+  "authors": [
+    {
+      "name": "Pete Inge",
+      "email": "pete.inge@gmail.com",
+      "role": "Maintainer"
+    }
+  ],
+  "license": "GPL-2.0+",
+  "minimum-stability": "dev",
+  "require": {
+    "php": "^8.0",
+    "composer/installers": "^1.9",
+    "oomphinc/composer-installers-extender": "^2.0"
+  }
+}
