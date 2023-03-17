@@ -6,11 +6,6 @@ package: External Site Monitor
 
 dependencies:
   - ultimate_cron
-  # - esm_base
-  # - esm_test_base
-  # - inline_entity_form
   # - queue_ui
-  # - esm_site
-
 
 configure: external_site_monitor.admin_config

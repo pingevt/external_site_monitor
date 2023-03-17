@@ -1,0 +1,7 @@
+# exclude .gitignore and similar from the generated tarball
+.git*                   export-ignore
+.vscode
+
+# exclude CI configurations (useless outside the repo)
+./phpunit.xml           export-ignore
+assets/src/*            export-ignore
