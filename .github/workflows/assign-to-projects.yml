@@ -20,8 +20,8 @@ jobs:
         uses: leonsteinhaeuser/project-beta-automations@v2.0.1
         with:
           gh_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          # user: sample-user
-          organization: pingevt
+          user: pingevt
+          # organization: pingevt
           project_id: 1
           resource_node_id: ${{ github.event.issue.node_id }}
           status_value: ${{ env.target }} # Target status
