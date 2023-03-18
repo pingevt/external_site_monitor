@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\"",
     "build": "npx bldr build",
     "clean": "rm -rfv ./assets/dist/* && rm -rfv ./modules/**/assets/dist/*",
-    "watch": "npx bldr watch"
+    "watch": "npx bldr watch",
+    "set-version": "node ./bin/version.js"
   },
   "repository": {
     "type": "git",
@@ -30,6 +31,7 @@
     "chokidar": "^3.5.3",
     "colors": "^1.4.0",
     "compress-images": "^2.0.5",
+    "date-and-time": "^2.4.3",
     "esbuild": "^0.14.43",
     "esbuild-plugin-eslint": "^0.0.1",
     "eslint": "^8.18.0",
@@ -52,6 +54,7 @@
     "rollup": "^2.75.6",
     "rollup-plugin-build-statistics": "^0.0.19",
     "rollup-plugin-terser": "^7.0.2",
+    "semver": "^7.3.8",
     "stylelint": "^14.9.0",
     "stylelint-config-prettier": "^9.0.3",
     "stylelint-declaration-block-no-ignored-properties": "^2.5.0",
