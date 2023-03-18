@@ -1,40 +1,17 @@
-.o-url-result {
-  margin: 2rem 0 10rem; }
+.o-url-result{ margin:2rem 0 10rem; }
 
-td.val-x-low {
-  color: var(--esm-error-text-color); }
+td.val-x-low{ color:var(--esm-error-text-color); }
 
-td.val-low {
-  color: var(--esm-warning-text-color); }
+td.val-low{ color:var(--esm-warning-text-color); }
 
-td.val-acceptable {
-  color: inherit; }
+td.val-acceptable{ color:inherit; }
 
-td.val-high {
-  color: var(--esm-success-text-color); }
+td.val-high{ color:var(--esm-success-text-color); }
 
-td.val-rising span,
-td.val-falling span {
-  position: relative; }
-  td.val-rising span::after,
-  td.val-falling span::after {
-    content: "";
-    display: block;
-    position: absolute;
-    width: 0px;
-    height: 0px;
-    top: 50%;
-    right: -2rem;
-    -webkit-transform: translate(0, -50%);
-            transform: translate(0, -50%);
-    border: 8px solid transparent; }
+td.val-rising span, td.val-falling span{ position:relative; }
 
-td.val-rising span::after {
-  border-top: 0px solid transparent;
-  border-bottom: 8px solid var(--esm-c-success-dark); }
+td.val-rising span::after, td.val-falling span::after{ content:""; display:block; position:absolute; width:0px; height:0px; top:50%; right:-2rem; transform:translate(0, -50%); border:8px solid transparent; }
 
-td.val-falling span::after {
-  border-top: 8px solid var(--esm-c-error-dark);
-  border-bottom: 0px solid transparent; }
+td.val-rising span::after{ border-top:0px solid transparent; border-bottom:8px solid var(--esm-c-success-dark); }
 
-/*# sourceMappingURL=lighthouse_results.css.map */
+td.val-falling span::after{ border-top:8px solid var(--esm-c-error-dark); border-bottom:0px solid transparent; }
