@@ -9,3 +9,9 @@ dependencies:
   # - queue_ui
 
 configure: external_site_monitor.admin_config
+
+
+# Information added by packaging script on 2023-03-18
+version: 1.0.0-rc.1
+project: external_site_monitor
+datestamp: 1679163966688

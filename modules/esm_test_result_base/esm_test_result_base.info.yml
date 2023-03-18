@@ -4,3 +4,9 @@ description: 'Provides a result entity.'
 package: External Site Monitor
 core_version_requirement: ^8 || ^9
 configure: entity.result_type.collection
+
+
+# Information added by packaging script on 2023-03-18
+version: 1.0.0-rc.1
+project: external_site_monitor
+datestamp: 1679163966688
