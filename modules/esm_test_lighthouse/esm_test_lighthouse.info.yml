@@ -12,6 +12,6 @@ configure: esm_test_lighthouse.lighthouse_test_settings
 
 
 # Information added by packaging script on 2023-03-18
-version: 1.0.0-alpha1
+version: 1.0.0-rc2
 project: external_site_monitor
-datestamp: 1679167204700
+datestamp: 1679169841708
