@@ -12,6 +12,6 @@ configure: esm_test_html_val.html_val_test_settings
 
 
 # Information added by packaging script on 2023-03-18
-version: 1.0.0-rc.1
+version: 1.0.0-alpha1
 project: external_site_monitor
-datestamp: 1679163966688
+datestamp: 1679167204700
