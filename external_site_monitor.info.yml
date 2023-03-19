@@ -8,6 +8,7 @@ dependencies:
   - drupal:automated_cron
   - drupal:dblog
   - drupal:field
+  - drupal:file
   - drupal:link
   - drupal:taxonomy
   - drupal:text
