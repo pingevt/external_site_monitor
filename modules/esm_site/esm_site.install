@@ -12,20 +12,21 @@ use Drupal\taxonomy\Entity\Term;
  */
 function esm_site_install() {
 
-  $terms = [
-    'Higher Ed',
-    'Museum',
-    'Agency',
-    'Other',
-  ];
+  // $terms = [
+  //   'Higher Ed',
+  //   'Museum',
+  //   'Agency',
+  //   'Other',
+  // ];
 
-  foreach ($terms as $i => $t) {
-    Term::create([
-      'name' => $t,
-      'vid' => 'site_type',
-      'weight' => $i,
-    ])->save();
-  }
+  // foreach ($terms as $i => $t) {
+  //   Term::create([
+  //     'name' => $t,
+  //     'vid' => 'site_type',
+  //     'weight' => $i,
+  //   ])->save();
+  // }
+
 }
 
 /**
