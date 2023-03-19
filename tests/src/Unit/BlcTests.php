@@ -20,6 +20,9 @@ class BlcTests extends UnitTestCase {
     $this->siteCrawler = new SiteCrawlerController();
   }
 
+  /**
+   * Test staic vars.
+   */
   public function testCheckStaticVars() {
 
     // Class Constants.
