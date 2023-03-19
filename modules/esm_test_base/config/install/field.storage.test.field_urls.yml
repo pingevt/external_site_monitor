@@ -2,11 +2,10 @@ langcode: en
 status: true
 dependencies:
   module:
-    - esm_test_base
     - link
   enforced:
     module:
-      - esm_test_lighthouse
+      - esm_test_base
 id: test.field_urls
 field_name: field_urls
 entity_type: test
