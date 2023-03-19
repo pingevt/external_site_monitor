@@ -192,7 +192,9 @@ jobs:
         run: |
           php -d sendmail_path=$(which true); vendor/bin/drush --yes -v \
             site-install minimal --db-url="$SIMPLETEST_DB"
-          vendor/bin/drush en $DRUPAL_MODULE_NAME -y
+          vendor/bin/drush en $DRUPAL_MODULE_NAME esm_site esm_test_base \
+            esm_test_blc esm_test_html_val esm_test_lighthouse esm_test_pchr \
+            esm_test_result_base esm_test_tag_checker esm_test_wpt esm_url_group -y
 
       - name: Run PHPCS
         working-directory: ${{ env.DRUPAL_ROOT }}
