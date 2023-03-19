@@ -1,7 +1,6 @@
 name: Tests
 on:
   push:
-    branches: [ 1.x ]
   pull_request:
     branches: [ 1.x ]
 env:
