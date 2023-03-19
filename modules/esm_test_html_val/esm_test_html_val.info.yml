@@ -3,7 +3,7 @@ type: module
 description: 'Provides tests for HTML validation using W3.org checker'
 package: External Site Monitor
 core: 8.x
-core_version_requirement: ^8 || ^9
+core_version_requirement: ^9 || ^10
 dependencies:
   - esm_test_base
   - esm_test_result_base

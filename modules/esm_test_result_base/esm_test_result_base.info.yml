@@ -2,7 +2,7 @@ name: "External Site Monitor: Test Result Base"
 type: module
 description: 'Provides a result entity.'
 package: External Site Monitor
-core_version_requirement: ^8 || ^9
+core_version_requirement: ^9 || ^10
 configure: entity.result_type.collection
 
 
