@@ -2,7 +2,6 @@ name: esm_url_group
 type: module
 description: 'Provides an url group entity.'
 package: External Site Monitor
-core: 8.x
 core_version_requirement: ^9 || ^10
 configure: entity.url_group.settings
 dependencies:

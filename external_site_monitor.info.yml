@@ -5,6 +5,13 @@ core_version_requirement: ^9 || ^10
 package: External Site Monitor
 
 dependencies:
+  - drupal:automated_cron
+  - drupal:dblog
+  - drupal:field
+  - drupal:link
+  - drupal:taxonomy
+  - drupal:text
+  - drupal:views
   - ultimate_cron
   # - queue_ui
 

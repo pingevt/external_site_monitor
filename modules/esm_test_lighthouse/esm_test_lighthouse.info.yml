@@ -2,7 +2,6 @@ name: 'External Site Monitor: Lighthouse Testing'
 type: module
 description: 'Provides tests for Lighthouse'
 package: External Site Monitor
-core: 8.x
 core_version_requirement: ^9 || ^10
 dependencies:
   - esm_test_base
