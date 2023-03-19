@@ -1,0 +1,6 @@
+services:
+  esm_site.commands:
+    class: \Drupal\esm_site\Commands\SiteCommands
+    tags:
+      - { name: drush.command }
+    arguments: ['@entity_type.manager']
