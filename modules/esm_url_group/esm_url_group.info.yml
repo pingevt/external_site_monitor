@@ -5,7 +5,7 @@ package: External Site Monitor
 core_version_requirement: ^9 || ^10
 configure: entity.url_group.settings
 dependencies:
-  - esm_site
+  - external_site_monitor:esm_site
 
 
 # Information added by packaging script on 2023-03-18

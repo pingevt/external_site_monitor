@@ -4,8 +4,8 @@ description: 'Provides tests for HTML tag checking. Meta Tags and H tags'
 package: External Site Monitor
 core_version_requirement: ^9 || ^10
 dependencies:
-  - esm_test_base
-  - esm_test_result_base
+  - external_site_monitor:esm_test_base
+  - external_site_monitor:esm_test_result_base
 
 configure: esm_test_tag_checker.tag_checker_test_settings
 
