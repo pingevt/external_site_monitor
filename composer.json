@@ -14,6 +14,8 @@
   "require": {
     "php": "^8.0",
     "composer/installers": "^1.9||^2.0",
+    "drupal/charts": "^5",
+    "drupal/ultimate_cron": "^2.0@alpha",
     "oomphinc/composer-installers-extender": "^2.0",
     "melbahja/semver": "^1.0.0"
   }

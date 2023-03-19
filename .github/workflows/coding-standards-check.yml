@@ -1,4 +1,4 @@
-name: Test
+name: Tests
 on:
   push:
     branches: [ 1.x ]
@@ -166,6 +166,7 @@ jobs:
           composer config extra.installer-paths
           composer require mglaman/drupal-check --dev
           composer require drupal/ultimate_cron
+          composer require drupal/charts
           composer require pingevt/$DRUPAL_MODULE_NAME
 
       # PHP 8+ requires newer phpunit, use core's composer script
