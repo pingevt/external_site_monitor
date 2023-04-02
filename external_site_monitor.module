@@ -5,6 +5,9 @@
  * This module is the base modules for site testing.
  */
 
+use Drupal\update\UpdateManagerInterface;
+use Melbahja\Semver\Semver;
+
 /**
  * Implements hook_theme().
  */
