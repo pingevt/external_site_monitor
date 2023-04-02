@@ -9,7 +9,7 @@ configure: entity.site.settings
 
 
 
-# Information added by packaging script on 2023-03-19
-version: 1.0.0-rc3
+# Information added by packaging script on 2023-04-02
+version: 1.0.0-rc4
 project: external_site_monitor
-datestamp: 1679251405531
+datestamp: 1680453346832
