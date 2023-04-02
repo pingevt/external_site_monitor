@@ -1,0 +1,48 @@
+<?php
+
+/**
+ * @file
+ * Handle install and updates for the lighthouse tests.
+ */
+
+use Drupal\esm_test_result_base\Entity\Result;
+
+/**
+ * Update Lighthouse Test results.
+ */
+function esm_test_lighthouse_update_9001(&$sandbox) {
+
+  if (!isset($sandbox['total'])) {
+    $results = \Drupal::entityQuery('result')->condition('bundle', 'lighthouse_test_result')->execute();
+    $sandbox['total'] = count($results);
+    $sandbox['current'] = 0;
+
+    if (empty($sandbox['total'])) {
+      $sandbox['#finished'] = 1;
+      return;
+    }
+  }
+
+  $results_per_batch = 5;
+
+  $ids = \Drupal::entityQuery('result')
+    ->condition('bundle', 'lighthouse_test_result')
+    ->range($sandbox['current'], $results_per_batch)
+    ->execute();
+
+  foreach ($ids as $id) {
+    $result = Result::load($id);
+    $result->save();
+    $sandbox['current']++;
+  }
+
+  \Drupal::messenger()->addMessage($sandbox['current'] . ' results processed.');
+
+  if ($sandbox['current'] >= $sandbox['total']) {
+    $sandbox['#finished'] = 1;
+  }
+  else {
+    $sandbox['#finished'] = ($sandbox['current'] / $sandbox['total']);
+  }
+}
+

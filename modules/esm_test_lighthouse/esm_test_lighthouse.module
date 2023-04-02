@@ -5,6 +5,7 @@
  * Handle functions and hooks for the lighthouse tests.
  */
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Template\Attribute;
 
 /**
@@ -74,6 +75,7 @@ function esm_test_lighthouse_preprocess_views_view_table(&$variables) {
       "field_accessibility",
       "field_seo",
       "field_pwa",
+      "field_benchmark_index",
     ];
 
     // Set classes.
@@ -106,6 +108,34 @@ function esm_test_lighthouse_preprocess_views_view_table(&$variables) {
           }
         }
       }
+    }
+  }
+}
+
+/**
+ * Implements hook_emtity_presave().
+ */
+function esm_test_lighthouse_result_presave(EntityInterface $entity) {
+
+  if ($entity->bundle() == "lighthouse_test_result") {
+
+    if ($file = $entity->field_lh_json_report->entity) {
+      $file_system = \Drupal::service('file_system');
+      $realpath = $file_system->realpath($file->getFileUri());
+
+      $contents = file_get_contents($realpath);
+      $json_report = json_decode($contents);
+
+      if ($json_report == NULL) {
+        \Drupal::messenger()->addWarning('Bad data response');
+      }
+
+      $entity->field_performance = $json_report->categories->performance->score ?? NULL;
+      $entity->field_accessibility = $json_report->categories->accessibility->score ?? NULL;
+      $entity->field_best_practices = $json_report->categories->{'best-practices'}->score ?? NULL;
+      $entity->field_seo = $json_report->categories->seo->score ?? NULL;
+      $entity->field_pwa = $json_report->categories->pwa->score ?? NULL;
+      $entity->field_benchmark_index = $json_report->environment->benchmarkIndex ?? NULL;
     }
   }
 }

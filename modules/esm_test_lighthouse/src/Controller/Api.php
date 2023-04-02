@@ -106,11 +106,12 @@ class Api extends ControllerBase implements ContainerInjectionInterface {
         $report = current($reports);
 
         // Set Summary.
-        $report->field_performance = $result->summary->performance;
-        $report->field_accessibility = $result->summary->accessibility;
-        $report->field_best_practices = $result->summary->{'best-practices'};
-        $report->field_seo = $result->summary->seo;
-        $report->field_pwa = $result->summary->pwa;
+        // Moved this to entity_presave.
+        // $report->field_performance = $result->summary->performance;
+        // $report->field_accessibility = $result->summary->accessibility;
+        // $report->field_best_practices = $result->summary->{'best-practices'};
+        // $report->field_seo = $result->summary->seo;
+        // $report->field_pwa = $result->summary->pwa;
 
         // Add files.
         $html_filename = explode(".lighthouseci/", $result->htmlPath)[1];
