@@ -8,7 +8,7 @@ use Drupal\Tests\BrowserTestBase;
 /**
  *
  *
- * @group amon_carter
+ * @group external_site_monitor
  */
 class BlcFuncTest extends BrowserTestBase {
 
