@@ -35,6 +35,7 @@ function esm_site_install() {
 function esm_site_uninstall() {
   $tids = \Drupal::entityQuery('taxonomy_term')
     ->condition('vid', 'site_type')
+    ->accessCheck(FALSE)
     ->execute();
 
   $controller = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
