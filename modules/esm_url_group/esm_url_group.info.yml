@@ -1,4 +1,4 @@
-name: esm_url_group
+name: URL Group
 type: module
 description: 'Provides an url group entity.'
 package: External Site Monitor
