@@ -19,7 +19,7 @@ dependencies:
 configure: external_site_monitor.admin_config
 
 
-# Information added by packaging script on 2023-04-02
-version: 1.0.0-rc4
+# Information added by packaging script on 2023-07-05
+version: 1.0.0-rc5
 project: external_site_monitor
-datestamp: 1680453346832
+datestamp: 1688558172401
