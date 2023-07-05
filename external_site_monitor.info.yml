@@ -14,6 +14,7 @@ dependencies:
   - drupal:text
   - drupal:views
   - ultimate_cron
+  - key:key
   # - queue_ui
 
 configure: external_site_monitor.admin_config
