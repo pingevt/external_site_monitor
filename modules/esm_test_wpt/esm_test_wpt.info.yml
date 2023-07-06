@@ -11,6 +11,6 @@ configure: esm_test_wpt.wpt_test_settings
 
 
 # Information added by packaging script on 2023-07-05
-version: 1.0.0-rc5
+version: 1.0.0-rc6
 project: external_site_monitor
-datestamp: 1688558172401
+datestamp: 1688614365369
