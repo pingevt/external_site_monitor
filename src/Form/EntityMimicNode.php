@@ -2,13 +2,44 @@
 
 namespace Drupal\external_site_monitor\Form;
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Entity\ContentEntityForm;
+use Drupal\Core\Entity\EntityRepositoryInterface;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\RendererInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Form controller for the race entity edit forms.
  */
 class EntityMimicNode extends ContentEntityForm {
+
+  /**
+   * The Drupal renderer service.
+   *
+   * @var \Drupal\Core\Render\RendererInterface
+   */
+  protected $druaplRenderer;
+
+  public function __construct(EntityRepositoryInterface $entity_repository, EntityTypeBundleInfoInterface $entity_type_bundle_info, TimeInterface $time, RendererInterface $render) {
+    $this->entityRepository = $entity_repository;
+    $this->entityTypeBundleInfo = $entity_type_bundle_info;
+    $this->time = $time;
+    $this->druaplRenderer = $render;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('entity.repository'),
+      $container->get('entity_type.bundle.info'),
+      $container->get('datetime.time'),
+      $container->get('renderer')
+    );
+  }
 
   /**
    * {@inheritdoc}

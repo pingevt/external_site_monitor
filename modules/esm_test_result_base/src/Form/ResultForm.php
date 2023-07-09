@@ -20,7 +20,7 @@ class ResultForm extends EntityMimicNode {
     $link = $entity->toLink($this->t('View'))->toRenderable();
 
     $message_arguments = ['%label' => $this->entity->label()];
-    $logger_arguments = $message_arguments + ['link' => render($link)];
+    $logger_arguments = $message_arguments + ['link' => $this->druaplRenderer->render($link)];
 
     if ($result == SAVED_NEW) {
       $this->messenger()->addStatus($this->t('New result %label has been created.', $message_arguments));
