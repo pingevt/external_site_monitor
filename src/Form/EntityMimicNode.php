@@ -11,7 +11,7 @@ use Drupal\Core\Render\RendererInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Form controller for the race entity edit forms.
+ * Form controller to mimic "node" entity forms with tray on right hand side..
  */
 class EntityMimicNode extends ContentEntityForm {
 
@@ -22,6 +22,9 @@ class EntityMimicNode extends ContentEntityForm {
    */
   protected $druaplRenderer;
 
+  /**
+   * {@inheritdoc}
+   */
   public function __construct(EntityRepositoryInterface $entity_repository, EntityTypeBundleInfoInterface $entity_type_bundle_info, TimeInterface $time, RendererInterface $render) {
     $this->entityRepository = $entity_repository;
     $this->entityTypeBundleInfo = $entity_type_bundle_info;

@@ -3,29 +3,20 @@
 namespace Drupal\external_site_monitor;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Breadcrumb\Breadcrumb;
 use Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Controller\TitleResolverInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Entity\FieldableEntityInterface;
-use Drupal\Core\Language\Language;
-use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Lock\LockBackendInterface;
-use Drupal\Core\Menu\MenuActiveTrail;
 use Drupal\Core\Menu\MenuActiveTrailInterface;
 use Drupal\Core\Menu\MenuLinkManagerInterface;
 use Drupal\Core\Routing\AdminContext;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Url;
-use Drupal\menu_link_content\Plugin\Menu\MenuLinkContent;
-use Drupal\node\NodeInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * {@inheritdoc}
@@ -158,8 +149,6 @@ class BreadcrumbBuilder implements BreadcrumbBuilderInterface {
     $this->lock = $lock;
   }
 
-
-
   /**
    * {@inheritdoc}
    */
@@ -218,6 +207,7 @@ class BreadcrumbBuilder implements BreadcrumbBuilderInterface {
           case 'result':
             $links[] = Link::createFromRoute($objs['test']->label() . " Results", 'test.test_results', ['test' => $objs['test']->id()]);
             break;
+
           case 'test':
             $links[] = Link::createFromRoute($objs['site']->label() . " Tests", 'site.tests', ['site' => $objs['site']->id()]);
             break;

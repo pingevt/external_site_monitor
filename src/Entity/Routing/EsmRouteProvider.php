@@ -4,8 +4,10 @@ namespace Drupal\external_site_monitor\Entity\Routing;
 
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Routing\AdminHtmlRouteProvider;
-use Symfony\Component\Routing\Route;
 
+/**
+ * Class to set admin routes on tite entities.
+ */
 class EsmRouteProvider extends AdminHtmlRouteProvider {
 
   /**
@@ -28,4 +30,5 @@ class EsmRouteProvider extends AdminHtmlRouteProvider {
       return $route;
     }
   }
+
 }
