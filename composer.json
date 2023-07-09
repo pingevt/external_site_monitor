@@ -18,6 +18,7 @@
     "drupal/charts": "^5",
     "drupal/key": "^1.17",
     "drupal/ultimate_cron": "^2.0@alpha",
+    "drupal/views_bulk_operations": "^4.2",
     "oomphinc/composer-installers-extender": "^2.0",
     "melbahja/semver": "^1.0.0"
   }
