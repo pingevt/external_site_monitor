@@ -58,60 +58,60 @@ function template_preprocess_test(array &$variables) {
 
   // Schedule Visual.
 
-  $day = date('w');
-  $week_start_str = date('m-d-Y', strtotime('-'.$day.' days'));
+  // $day = date('w');
+  // $week_start_str = date('m-d-Y', strtotime('-'.$day.' days'));
 
-  // ksm($day, $week_start_str);
+  // // ksm($day, $week_start_str);
 
-  $period_start = DateTime::createFromFormat("m-d-Y", $week_start_str);
-  $period_start->setTime(0, 0, 0, 0);
-  $period_end = clone $period_start;
-  $period_end->add(new DateInterval('P13D'));
-  $period_end->setTime(23, 59, 59);
+  // $period_start = DateTime::createFromFormat("m-d-Y", $week_start_str);
+  // $period_start->setTime(0, 0, 0, 0);
+  // $period_end = clone $period_start;
+  // $period_end->add(new DateInterval('P13D'));
+  // $period_end->setTime(23, 59, 59);
 
-  // ksm($period_start, $period_end);
+  // // ksm($period_start, $period_end);
 
-  $expression = $test->schedule->value;
-  $cron = new CronExpression($expression);
-  // ksm($cron, $cron->getNextRunDate($period_start, 0, TRUE, NULL), $cron->getMultipleRunDates(14, $period_start, FALSE, TRUE, NULL));
+  // $expression = $test->schedule->value;
+  // $cron = new CronExpression($expression);
+  // // ksm($cron, $cron->getNextRunDate($period_start, 0, TRUE, NULL), $cron->getMultipleRunDates(14, $period_start, FALSE, TRUE, NULL));
 
-  $period_render = [];
-  $previous_run = clone $period_start;
-  $running = TRUE;
-  while ($running) {
-    $next_run = $cron->getNextRunDate($previous_run, 0, FALSE, NULL);
-    // ksm($next_run < $period_end);
-    if ($next_run < $period_end) {
-      $interval = $period_start->diff($next_run);
-      // ksm($next_run, $interval, $interval->days);
-      // ksm($next_run->format("H"), $next_run->format("i"));
-      $minutes = $next_run->format("H") * 60 + $next_run->format("i");
-      // ksm($minutes, ($minutes / 15));
+  // $period_render = [];
+  // $previous_run = clone $period_start;
+  // $running = TRUE;
+  // while ($running) {
+  //   $next_run = $cron->getNextRunDate($previous_run, 0, FALSE, NULL);
+  //   // ksm($next_run < $period_end);
+  //   if ($next_run < $period_end) {
+  //     $interval = $period_start->diff($next_run);
+  //     // ksm($next_run, $interval, $interval->days);
+  //     // ksm($next_run->format("H"), $next_run->format("i"));
+  //     $minutes = $next_run->format("H") * 60 + $next_run->format("i");
+  //     // ksm($minutes, ($minutes / 15));
 
-      $row = (int) ($minutes / 15) + 1;
-      $col = $interval->days + 1;
-      $period_render[$row . "--" . $col][] = [
-        '#type' => 'html_tag',
-        '#tag' => 'div',
-        '#attributes' => ['class' => ['visual-item', 'row-' . $row, 'col-' . $col]]
-      ];
-      $previous_run = clone $next_run;
-    }
-    else {
-      $running = FALSE;
-    }
-  }
+  //     $row = (int) ($minutes / 15) + 1;
+  //     $col = $interval->days + 1;
+  //     $period_render[$row . "--" . $col][] = [
+  //       '#type' => 'html_tag',
+  //       '#tag' => 'div',
+  //       '#attributes' => ['class' => ['visual-item', 'row-' . $row, 'col-' . $col]]
+  //     ];
+  //     $previous_run = clone $next_run;
+  //   }
+  //   else {
+  //     $running = FALSE;
+  //   }
+  // }
 
-  foreach ($period_render as &$cell) {
-    if (count($cell) > 1) {
-      foreach ($cell as $x => &$p) {
-        $p['#attributes']['class'][] = "offset-" . $x;
-      }
-    }
-  }
+  // foreach ($period_render as &$cell) {
+  //   if (count($cell) > 1) {
+  //     foreach ($cell as $x => &$p) {
+  //       $p['#attributes']['class'][] = "offset-" . $x;
+  //     }
+  //   }
+  // }
 
-  // ksm($period_render);
-  $variables['period_render'] = $period_render;
+  // // ksm($period_render);
+  // $variables['period_render'] = $period_render;
 }
 
 /**
