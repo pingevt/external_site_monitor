@@ -93,7 +93,7 @@ class LighthouseTestRunner extends EsmTestRunnerBase implements EsmTestRunnerInt
     $config = $this->configFactory->get('esm_test_lighthouse.settings');
 
     // Set Time for this report.
-    $created = new \DateTime(NULL, $this->utcTz());
+    $created = new \DateTime("now", $this->utcTz());
     $created->setTimezone($this->utcTz());
     $timestamp = $created->format("Ymd-His");
 

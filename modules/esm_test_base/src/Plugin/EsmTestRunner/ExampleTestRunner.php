@@ -35,7 +35,7 @@ class ExampleTestRunner extends EsmTestRunnerBase implements EsmTestRunnerInterf
 
     $result->save();
 
-    $created = new \DateTime(NULL, $this->utcTz());
+    $created = new \DateTime("now", $this->utcTz());
     $created->setTimestamp($result->getCreatedTime());
 
     $test->setNewRevision();

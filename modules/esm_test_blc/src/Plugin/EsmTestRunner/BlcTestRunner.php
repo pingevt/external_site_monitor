@@ -31,7 +31,7 @@ class BlcTestRunner extends EsmTestRunnerBase implements EsmTestRunnerInterface,
     $config = $this->configFactory->get('esm_test_blc.settings');
 
     // Set Time for this report.
-    $created = new \DateTime(NULL, $this->utcTz());
+    $created = new \DateTime("now", $this->utcTz());
     $created->setTimezone($this->utcTz());
     $timestamp = $created->format("Ymd-His");
 
@@ -70,7 +70,7 @@ class BlcTestRunner extends EsmTestRunnerBase implements EsmTestRunnerInterface,
     $queue->createItem($queue_item);
 
     // Update Test with lastupdate time.
-    $created = new \DateTime(NULL, $this->utcTz());
+    $created = new \DateTime("now", $this->utcTz());
     $created->setTimestamp($result->getCreatedTime());
 
     $test->setNewRevision();
