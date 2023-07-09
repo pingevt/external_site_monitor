@@ -15,6 +15,8 @@ dependencies:
   - drupal:views
   - ultimate_cron
   - key:key
+  - charts:charts
+  - charts:charts_c3
   # - queue_ui
 
 configure: external_site_monitor.admin_config
