@@ -8,7 +8,7 @@ dependencies:
   - external_site_monitor:esm_site
 
 
-# Information added by packaging script on 2023-07-09
-version: 1.0.0-rc7
+# Information added by packaging script on 2023-10-14
+version: 1.0.0-rc8
 project: external_site_monitor
-datestamp: 1688925993517
+datestamp: 1697308410566
