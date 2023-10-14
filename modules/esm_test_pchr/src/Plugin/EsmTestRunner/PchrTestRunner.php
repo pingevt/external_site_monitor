@@ -98,6 +98,8 @@ class PchrTestRunner extends EsmTestRunnerBase implements EsmTestRunnerInterface
       $response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
       $this->loggerFactory->get('esm:pchr')->debug("Response Code: @code", ["@code" => $response_code]);
+      $this->loggerFactory->get('esm:pchr')->debug("Response: @response", ["@response" => $response]);
+      $this->loggerFactory->get('esm:pchr')->debug("Response: @response", ["@response" => json_decode($response)]);
 
       if ($errno = curl_errno($ch)) {
         $error_message = curl_strerror($errno);
