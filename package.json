@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/pingevt/external_site_monitor#readme",
   "dependencies": {
-    "@bluecadet/bldr": "^0.7.4",
+    "@bluecadet/bldr": "^1.0.6",
     "@rollup/plugin-babel": "^5.3.1",
     "@rollup/plugin-commonjs": "^22.0.0",
     "@rollup/plugin-eslint": "^8.0.2",
