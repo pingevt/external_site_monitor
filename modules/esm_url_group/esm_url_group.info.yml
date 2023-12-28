@@ -9,6 +9,6 @@ dependencies:
 
 
 # Information added by packaging script on 2023-12-28
-version: 1.0.0
-project: external_site_monitor
-datestamp: 1703792313755
+version: 1.0.1-alpha1
+project: external-site-monitor
+datestamp: 1703793330600

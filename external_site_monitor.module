@@ -5,8 +5,8 @@
  * This module is the base modules for site testing.
  */
 
+use Bluecadet\DrupalPackageManager\Checker;
 use Drupal\update\UpdateManagerInterface;
-use Melbahja\Semver\Semver;
 
 /**
  * Implements hook_theme().
@@ -34,92 +34,25 @@ function external_site_monitor_page_attachments_alter(array &$page) {
  * Implements hook_update_status_alter().
  */
 function external_site_monitor_update_status_alter(&$projects) {
-  // Init vars.
-  $also = [];
-  $releases = [];
-  $lates_version = "";
-  $recomended = "";
-  $module_name = 'external_site_monitor';
-  $package_name = 'pingevt/' . $module_name;
-  $packagist_base = "https://packagist.org/packages/pingevt/external_site_monitor";
-  $url = "https://repo.packagist.org/p2/pingevt/external_site_monitor.json";
+  $modules['pingevt'] = [
+    'external_site_monitor',
+  ];
 
-  // Initiate curl and get info from Packagist.
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-  curl_setopt($ch, CURLOPT_URL, $url);
-  $result = curl_exec($ch);
-  curl_close($ch);
+  $filtered_projects = [];
 
-  $data = json_decode($result, TRUE);
+  foreach ($modules as $user => $user_data) {
+    $filtered_projects += array_filter($projects, function($v) use ($user_data) {
+        return in_array($v, $user_data);
+    }, ARRAY_FILTER_USE_KEY);
+  }
 
-  $exisiting_version = Semver::parse($projects[$module_name]['existing_version']);
-  $packages = $data['packages'][$package_name];
-  // Sort pakcages from packagist lowest to highest.
-  uasort($packages, 'esm_order_packages');
+  $checker = new Checker($modules, $filtered_projects);
 
-  $projects[$module_name]['status'] = UpdateManagerInterface::CURRENT;
-
-  foreach ($packages as $package_data) {
-    $release_version = Semver::parse($package_data['version']);
-    if ($exisiting_version->compare($release_version, "<")) {
-
-      // Create release data.
-      $release_data = [
-        'name' => $projects[$module_name]['name'],
-        'version' => $package_data['version'],
-        'tag' => $package_data['version'],
-        'status' => "published",
-        'release_link' => $packagist_base . "#" . $package_data['version'],
-        'download_link' => $packagist_base . "#" . $package_data['version'],
-        'date' => strtotime($package_data['time']),
-        'files' => "",
-        'terms' => [],
-        'security' => "",
-      ];
-
-      $releases[$package_data['version']] = $release_data;
-
-      // Is is also?
-      if ($exisiting_version->getMajor() < $release_version->getMajor()) {
-        $projects[$module_name]['status'] = UpdateManagerInterface::NOT_CURRENT;
-        $also[$release_version->getMajor() . "." . $release_version->getMinor()] = $package_data['version'];
-      }
-      elseif ($exisiting_version->getMajor() == $release_version->getMajor() && $exisiting_version->getMinor() < $release_version->getMinor()) {
-        $also[$release_version->getMajor() . "." . $release_version->getMinor()] = $package_data['version'];
-      }
-
-      // Is it latest?
-      // Is it recommended?
-      if ($exisiting_version->getMajor() == $release_version->getMajor()) {
-        $projects[$module_name]['latest_version'] = $package_data['version'];
-        $projects[$module_name]['recommended'] = $package_data['version'];
-
-        if ($exisiting_version != $release_version) {
-          $projects[$module_name]['status'] = UpdateManagerInterface::NOT_CURRENT;
-        }
+  foreach ($modules as $user => $user_data) {
+    foreach ($user_data as $module_name) {
+      if (in_array($module_name, array_keys($projects))) {
+        $projects[$module_name] = $checker->updateDrupalModulePackage($projects[$module_name], $user, $module_name);
       }
     }
   }
-
-  // Update attributes.
-  $projects[$module_name]['link'] = $packagist_base;
-  $projects[$module_name]['title'] = $projects[$module_name]['info']['name'];
-
-  if (!empty($releases)) {
-    $projects[$module_name]['releases'] = $releases;
-  }
-  if (!empty($also)) {
-    $projects[$module_name]['also'] = $also;
-  }
-}
-
-/**
- * Sort Packages array from Packagist.
- */
-function esm_order_packages($a, $b) {
-  if (Semver::compare($a['version'], $b['version'])) {
-    return 0;
-  }
-  return Semver::compare($a['version'], $b['version'], '>') ? 1 : -1;
 }
