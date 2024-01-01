@@ -154,6 +154,7 @@ class LighthouseTestRunner extends EsmTestRunnerBase implements EsmTestRunnerInt
       $this->loggerFactory->get('esm:lighthouse')->debug("Attempting to Call Github Action: <pre>" . print_r([
         $config->get('api_url'),
         $post_data,
+        json_encode($post_data),
       ], TRUE) . "</pre>", []);
 
       $ch = curl_init($config->get('api_url'));
@@ -172,7 +173,8 @@ class LighthouseTestRunner extends EsmTestRunnerBase implements EsmTestRunnerInt
 
       $this->loggerFactory->get('esm:lighthouse')->debug("Response Code: @code", ["@code" => $response_code]);
 
-      if ($errno = curl_errno($ch)) {
+      $errno = curl_errno($ch);
+      if ($errno ) {
         $error_message = curl_strerror($errno);
         $this->loggerFactory->get('esm:lighthouse')->error("cURL erro ({@errno}): @err", [
           "@errno" => $errno,
