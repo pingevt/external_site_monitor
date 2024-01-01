@@ -1,5 +1,5 @@
 {
-  "name": "external-site-monitor",
+  "name": "external_site_monitor",
   "version": "1.0.1-alpha1",
   "description": "",
   "main": "index.js",
