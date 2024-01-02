@@ -5,15 +5,27 @@
  * Provides un/install functionality.
  */
 
+use Drupal\Core\Database\Database;
+
 /**
  * Implements hook_schema().
  */
 function esm_test_base_schema() {
+  return _esm_test_base_schemas();
+}
+
+function _esm_test_base_schemas() {
   $schema['esm_test_schedule'] = [
     'description' => 'A table to store future test times',
     'fields' => [
+      'id' => [
+        'description' => 'The unique ID',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
       'test_id' => [
-        'description' => 'Holds the id value',
+        'description' => 'Holds the test id value',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
@@ -25,6 +37,51 @@ function esm_test_base_schema() {
         'not null' => TRUE,
       ],
     ],
+    'primary key' => ['id'],
+    'foreign keys' => [
+      'test_id' => [
+        'table' => 'tes',
+        'columns' => [
+          'test' => 'id',
+        ],
+      ],
+    ],
   ];
   return $schema;
+}
+
+/**
+ * Add primary key to esm_test_schedule table.
+ */
+function esm_test_base_update_10001() {
+  $my_schemas = _esm_test_base_schemas();
+  $database = \Drupal::service('database');
+  $schema = Database::getConnection()->schema();
+
+  $schema->renameTable('esm_test_schedule', 'esm_test_schedule__tmp');
+
+  $schema->createTable('esm_test_schedule', $my_schemas['esm_test_schedule']);
+
+  // Get old values.
+  $selectQ = $database->select('esm_test_schedule__tmp', 't');
+  $selectQ->fields('t', []);
+  $results = $selectQ->execute()->fetchAll();
+
+  // Insert old values into new table.
+  $insertQuery = $database->insert('esm_test_schedule')->fields([
+    'test_id',
+    'scheduled',
+  ]);
+
+  foreach ($results as $result) {
+    $insertQuery->values([
+      'test_id' => $result->test_id,
+      'scheduled' => $result->scheduled,
+    ]);
+  }
+
+  $insertQuery->execute();
+
+  // Drop tmp table.
+  $schema->dropTable('esm_test_schedule__tmp');
 }
