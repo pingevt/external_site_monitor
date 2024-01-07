@@ -13,7 +13,7 @@ dependencies:
 configure: entity.test_type.collection
 
 
-# Information added by packaging script on 2024-01-01
-version: 1.0.1-alpha2
+# Information added by packaging script on 2024-01-06
+version: 1.0.1-beta1
 project: external_site_monitor
-datestamp: 1704135856151
+datestamp: 1704588938702
