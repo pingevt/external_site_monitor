@@ -8,13 +8,14 @@ use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
+use Drupal\Core\Logger\LoggerChannelTrait;
+use Drupal\external_site_monitor\DateTimeTrait;
+use Drupal\file\Entity\File;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
-use Drupal\file\Entity\File;
 
-use Drupal\external_site_monitor\DateTimeTrait;
 
 /**
  * Defines a route controller for ...
@@ -140,7 +141,8 @@ class Api extends ControllerBase implements ContainerInjectionInterface {
         $report->save();
       }
       else {
-        // @todo log error
+        // Log error.
+        $this->loggerFactory->get('esm:lighthouse')->error("No reports found. " . print_r($result, TRUE));
       }
     }
 
