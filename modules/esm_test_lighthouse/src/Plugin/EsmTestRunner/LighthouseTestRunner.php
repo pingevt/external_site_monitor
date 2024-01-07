@@ -99,8 +99,8 @@ class LighthouseTestRunner extends EsmTestRunnerBase implements EsmTestRunnerInt
 
     // Prepare Directory.
     $target_dir = $config->get('dir') . "/" . $timestamp;
-    $short_dir = explode("://", $target_dir)[1];
-    $this->fileSystem->prepareDirectory($target_dir, FileSystemInterface::CREATE_DIRECTORY);
+    // $short_dir = explode("://", $target_dir)[1];
+    // $this->fileSystem->prepareDirectory($target_dir, FileSystemInterface::CREATE_DIRECTORY);
 
     // Grab test URLs.
     $test_url_string_arr = array_map(
@@ -130,6 +130,11 @@ class LighthouseTestRunner extends EsmTestRunnerBase implements EsmTestRunnerInt
       },
       $results_entities
     );
+
+    // Add result ids to dir.
+    $target_dir .= "-" . implode("-", $result_ids_arr);
+    $short_dir = explode("://", $target_dir)[1];
+    $this->fileSystem->prepareDirectory($target_dir, FileSystemInterface::CREATE_DIRECTORY);
 
     $test_url_string = implode(",", $test_url_string_arr);
 
