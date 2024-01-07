@@ -5,3 +5,11 @@ htm_val:
       assets/dist/css/html_val_results.css: {}
   dependencies:
     - external_site_monitor/esm_base
+
+status_badge:
+  version: VERSION
+  css:
+    layout:
+      assets/dist/css/html_val_status_badge.css: {}
+  dependencies:
+    - esm_test_result_base/status_badge

@@ -1,9 +1,44 @@
-.layout-region{ box-sizing:border-box; }
-@media screen and (min-width: 780px), (orientation: landscape) and (min-device-height: 780px){ .layout-region-main, .layout-region-footer{ float:left; box-sizing:border-box; width:65%; padding-right:2em; }
-  [dir='rtl'] .layout-region-main, [dir='rtl'] .layout-region-footer{ float:right; padding-right:0; padding-left:2em; }
-  .layout-region-secondary{ float:right; width:35%; }
-  [dir='rtl'] .layout-region-secondary{ float:left; }
-  .layout-region-secondary .form-autocomplete, .layout-region-secondary .form-text, .layout-region-secondary .form-tel, .layout-region-secondary .form-email, .layout-region-secondary .form-url, .layout-region-secondary .form-search, .layout-region-secondary .form-number, .layout-region-secondary .form-color, .layout-region-secondary textarea{ box-sizing:border-box; width:100%; max-width:100%; } }
-@media screen and (max-width: 1020px){ .toolbar-vertical.toolbar-tray-open .layout-region-main, .toolbar-vertical.toolbar-tray-open .layout-region-footer, .toolbar-vertical.toolbar-tray-open .layout-region-secondary{ float:none; width:auto; padding-right:0; } }
-.field--widget-plugin-reference-options-buttons .form-checkboxes{ display:flex; }
-.field--widget-plugin-reference-options-buttons .form-checkboxes .form-type-checkbox{ padding:0 0.5rem; }
+.layout-region{
+  box-sizing:border-box; }
+@media screen and (min-width: 780px), (orientation: landscape) and (min-device-height: 780px){
+  .layout-region-main,
+  .layout-region-footer{
+    float:left;
+    box-sizing:border-box;
+    width:65%;
+    padding-right:2em; }
+  [dir='rtl'] .layout-region-main,
+  [dir='rtl'] .layout-region-footer{
+    float:right;
+    padding-right:0;
+    padding-left:2em; }
+  .layout-region-secondary{
+    float:right;
+    width:35%; }
+  [dir='rtl'] .layout-region-secondary{
+    float:left; }
+  .layout-region-secondary .form-autocomplete,
+  .layout-region-secondary .form-text,
+  .layout-region-secondary .form-tel,
+  .layout-region-secondary .form-email,
+  .layout-region-secondary .form-url,
+  .layout-region-secondary .form-search,
+  .layout-region-secondary .form-number,
+  .layout-region-secondary .form-color,
+  .layout-region-secondary textarea{
+    box-sizing:border-box;
+    width:100%;
+    max-width:100%; } }
+@media screen and (max-width: 1020px){
+  .toolbar-vertical.toolbar-tray-open .layout-region-main,
+  .toolbar-vertical.toolbar-tray-open .layout-region-footer,
+  .toolbar-vertical.toolbar-tray-open .layout-region-secondary{
+    float:none;
+    width:auto;
+    padding-right:0; } }
+.field--widget-plugin-reference-options-buttons .form-checkboxes{
+  display:flex; }
+.field--widget-plugin-reference-options-buttons .form-checkboxes .form-type-checkbox{
+  padding:0 0.5rem; }
+
+/*# sourceMappingURL=content.module.css.map */

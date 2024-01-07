@@ -136,7 +136,6 @@ class HtmlValTestRunner extends EsmTestRunnerBase implements EsmTestRunnerInterf
       ]);
 
       $response = curl_exec($ch);
-
       $response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
       if ($errno = curl_errno($ch)) {
@@ -263,7 +262,8 @@ class HtmlValTestRunner extends EsmTestRunnerBase implements EsmTestRunnerInterf
    */
   public function getStatusBadge(Result $result):StatusBadge {
 
-    $badge = new StatusBadge();
+    $badge = new StatusBadge('html_val_test');
+    $badge->addLibrary('esm_test_html_val/status_badge');
 
     $badge->addLabel(str_replace(['https://', "http://"], "", $result->field_url->uri));
     if ($result->field_error->value !== NULL) {

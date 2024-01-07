@@ -9,8 +9,19 @@ use Drupal\Core\Template\Attribute;
  */
 class StatusBadge {
 
+  private $testType = "";
   private $label = "";
   private $items = [];
+  private $libraries = [
+    'esm_test_result_base/status_badge',
+  ];
+
+  /**
+   * Constructor.
+   */
+  public function __construct(string $test_type = "") {
+    $this->testType = $test_type;
+  }
 
   /**
    * Add label to badge.
@@ -31,12 +42,22 @@ class StatusBadge {
   }
 
   /**
+   * Add aloibrary to attach to the badge.
+   */
+  public function addLibrary(string $library) {
+    $this->libraries[] = $library;
+  }
+
+  /**
    * Build a render array.
    */
   public function renderArray():array {
     $render = [
       '#theme' => 'status_badge',
-      '#attached' => ['library' => ["esm_test_result_base/status_badge"]],
+      '#attached' => ['library' => $this->libraries],
+      '#attributes' => [
+        'data-test-type' => $this->testType,
+      ],
       'badge_data' => [
         'label' => $this->label,
         'items' => [],

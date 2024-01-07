@@ -28,7 +28,7 @@ drupal_modules.forEach((val, i) => {
   sass_config.push({
     src: val + 'assets/src/scss/*.scss',
     dest: val + 'assets/dist/css',
-    watch: [val + 'assets/src/scss/**/*.css'],
+    watch: [val + 'assets/src/scss/**/*.scss'],
   });
 
   js_config.push({
@@ -43,6 +43,8 @@ drupal_modules.forEach((val, i) => {
   //   watch: [val + 'assets/src/images/**/*'],
   // });
 });
+
+// console.log(sass_config);
 
 module.exports = {
   css: css_config,

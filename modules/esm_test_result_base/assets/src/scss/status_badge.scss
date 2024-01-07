@@ -3,9 +3,11 @@ body.path-result .region--content-above > * {
   grid-column: 1 / 15;
 }
 
-
 div.esm-status-badge {
-  display: inline-flex;
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  max-width: 900px;
+  margin-bottom: 0.25em;
   color: var(--esm-c-white);
   border-radius: 5px;
   overflow: hidden;
@@ -27,6 +29,8 @@ div.esm-status-badge {
       display: inline-block;
       margin: 0;
       padding: 0 1rem;
+      flex-grow: 1;
+      text-align: center;
 
       &.sb-item--error {
         background-color: var(--esm-c-error-light);

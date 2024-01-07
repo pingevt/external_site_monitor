@@ -8,3 +8,10 @@ tag_checker_results:
   dependencies:
     - esm_test_base/tests
 
+status_badge:
+  version: VERSION
+  css:
+    layout:
+      assets/dist/css/tag_checker_status_badge.css: {}
+  dependencies:
+    - esm_test_result_base/status_badge
