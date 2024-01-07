@@ -10,7 +10,7 @@ dependencies:
 configure: esm_test_tag_checker.tag_checker_test_settings
 
 
-# Information added by packaging script on 2024-01-06
-version: 1.0.1-beta1
+# Information added by packaging script on 2024-01-07
+version: 1.0.1-beta2
 project: external_site_monitor
-datestamp: 1704588938702
+datestamp: 1704655492627
