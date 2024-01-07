@@ -249,7 +249,8 @@ class TagCheckerTestRunner extends EsmTestRunnerBase implements EsmTestRunnerInt
     $badge->addLibrary('esm_test_tag_checker/status_badge');
 
     $badge->addLabel(str_replace(['https://', "http://"], "", $result->field_url->uri));
-    $badge->addItem("info", $result->field_meta_tag_count->value, "Meta Tag Count");
+
+    $badge->addItem("info", ($result->field_meta_tag_count->value ?? "-"), "Meta Tag Count");
 
     $dup_id_c = $result->field_duplicate_ids->value ?? "-";
     if ($dup_id_c > 0) {
