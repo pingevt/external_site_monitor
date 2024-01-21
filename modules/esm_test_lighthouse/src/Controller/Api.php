@@ -93,13 +93,15 @@ class Api extends ControllerBase implements ContainerInjectionInterface {
 
     $report_id_arr = explode("+", $body_json->id_string);
 
-    $this->loggerFactory->get('esm:lighthouse')->debug("Recieved Lighthouse results. " . print_r($body_json, TRUE));
+    $this->loggerFactory->get('esm:lighthouse')->debug("Recieved Lighthouse results. <pre>" . print_r($body_json, TRUE) . "</pre>");
 
     $report_storage = $this->entityTypeManager->getStorage('result');
 
+    $target_dir = $body_json->dir;
+
     foreach ($body_json->results as $i => $result) {
 
-      $this->loggerFactory->get('esm:lighthouse')->debug("Attempting to find Reports. " . print_r($report_id_arr, TRUE) . " " . $result->url);
+      $this->loggerFactory->get('esm:lighthouse')->debug("Attempting to find Reports. <pre>" . print_r($report_id_arr, TRUE) . "</pre> " . $result->url);
 
       $reports = $report_storage->loadByProperties([
         'id' => $report_id_arr,
@@ -124,7 +126,7 @@ class Api extends ControllerBase implements ContainerInjectionInterface {
         $json_filename = explode(".lighthouseci/", $result->jsonPath)[1];
 
         $time = $this->getDateTimeFromEntity($report);
-        $target_dir = $config->get('dir') . "/" . $time->format("Ymd-His");
+        // $target_dir = $config->get('dir') . "/" . $time->format("Ymd-His");
 
         $target_html_file = $target_dir . "/" . $html_filename;
         $target_json_file = $target_dir . "/" . $json_filename;
