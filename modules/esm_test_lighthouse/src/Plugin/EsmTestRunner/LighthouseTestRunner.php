@@ -155,6 +155,7 @@ class LighthouseTestRunner extends EsmTestRunnerBase implements EsmTestRunnerInt
         'inputs' => [
           'urls' => $test_url_string,
           'dir' => $short_dir,
+          'full_dir' => $target_dir,
           'result_ids' => implode("+", $result_ids_arr),
           'callback' => $callback_url,
         ],

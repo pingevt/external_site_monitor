@@ -97,7 +97,7 @@ class Api extends ControllerBase implements ContainerInjectionInterface {
 
     $report_storage = $this->entityTypeManager->getStorage('result');
 
-    $target_dir = $body_json->dir;
+    $target_dir = $body_json->full_dir;
 
     foreach ($body_json->results as $i => $result) {
 
