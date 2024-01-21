@@ -138,6 +138,12 @@ class LighthouseTestRunner extends EsmTestRunnerBase implements EsmTestRunnerInt
 
     $test_url_string = implode(",", $test_url_string_arr);
 
+    // Update results to have upload dir.
+    foreach ($results_entities as $result) {
+      $result->field_lh_upload_dir = $target_dir;
+      $result->save();
+    }
+
     if ($config->get('github_token')) {
       $key_storage = $this->entityTypeManager->getStorage("key");
       $key = $key_storage->load($config->get('github_token'));

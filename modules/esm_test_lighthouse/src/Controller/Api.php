@@ -134,15 +134,24 @@ class Api extends ControllerBase implements ContainerInjectionInterface {
         $data['report_files'][$i]['html_file'] = $target_html_file;
         $data['report_files'][$i]['json_file'] = $target_json_file;
 
+        $this->loggerFactory->get('esm:lighthouse')->debug("File target_html_file. <pre>" . print_r($target_html_file, TRUE) . "</pre>");
+        $this->loggerFactory->get('esm:lighthouse')->debug("File target_json_file. <pre>" . print_r($target_json_file, TRUE) . "</pre>");
+
         if (file_exists($target_html_file)) {
           $data['report_files'][$i]['html'] = ["exists"];
           $file = $this->createFile($target_html_file, $report);
           $report->field_lh_html_report = $file->id();
         }
+        else {
+          $this->loggerFactory->get('esm:lighthouse')->error("File DNE. <pre>" . print_r($target_html_file, TRUE) . "</pre>");
+        }
         if (file_exists($target_json_file)) {
           $data['report_files'][$i]['json'] = ["exists"];
           $file = $this->createFile($target_json_file, $report);
           $report->field_lh_json_report = $file->id();
+        }
+        else {
+          $this->loggerFactory->get('esm:lighthouse')->error("File DNE. <pre>" . print_r($target_json_file, TRUE) . "</pre>");
         }
 
         $report->save();

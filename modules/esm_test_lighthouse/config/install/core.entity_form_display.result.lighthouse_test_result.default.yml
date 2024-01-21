@@ -8,6 +8,7 @@ dependencies:
     - field.field.result.lighthouse_test_result.field_best_practices
     - field.field.result.lighthouse_test_result.field_lh_html_report
     - field.field.result.lighthouse_test_result.field_lh_json_report
+    - field.field.result.lighthouse_test_result.field_lh_upload_dir
     - field.field.result.lighthouse_test_result.field_performance
     - field.field.result.lighthouse_test_result.field_pwa
     - field.field.result.lighthouse_test_result.field_seo
@@ -18,6 +19,8 @@ dependencies:
   enforced:
     module:
       - esm_test_lighthouse
+_core:
+  default_config_hash: jvsByTd4xOn6SWjwt7zO5n2jQr2yzkJyixQxae9tR74
 id: result.lighthouse_test_result.default
 targetEntityType: result
 bundle: lighthouse_test_result
@@ -31,56 +34,64 @@ content:
     third_party_settings: {  }
   field_accessibility:
     type: number
-    weight: 5
+    weight: 6
     region: content
     settings:
       placeholder: ''
     third_party_settings: {  }
   field_benchmark_index:
     type: number
-    weight: 9
+    weight: 10
     region: content
     settings:
       placeholder: ''
     third_party_settings: {  }
   field_best_practices:
     type: number
-    weight: 6
+    weight: 7
     region: content
     settings:
       placeholder: ''
     third_party_settings: {  }
   field_lh_html_report:
     type: file_generic
-    weight: 11
+    weight: 12
     region: content
     settings:
       progress_indicator: throbber
     third_party_settings: {  }
   field_lh_json_report:
     type: file_generic
-    weight: 10
+    weight: 11
     region: content
     settings:
       progress_indicator: throbber
     third_party_settings: {  }
+  field_lh_upload_dir:
+    type: string_textfield
+    weight: 4
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
   field_performance:
     type: number
-    weight: 4
+    weight: 5
     region: content
     settings:
       placeholder: ''
     third_party_settings: {  }
   field_pwa:
     type: number
-    weight: 8
+    weight: 9
     region: content
     settings:
       placeholder: ''
     third_party_settings: {  }
   field_seo:
     type: number
-    weight: 7
+    weight: 8
     region: content
     settings:
       placeholder: ''
