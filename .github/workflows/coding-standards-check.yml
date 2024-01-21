@@ -8,81 +8,13 @@ env:
   SIMPLETEST_BASE_URL: "http://127.0.0.1:8080"
   DRUPAL_MODULE_NAME: "external_site_monitor"
 jobs:
-  # testing:
-  #   name: Drupal ${{ matrix.drupal-core }} - PHP ${{ matrix.php-versions }}
-  #   runs-on: ubuntu-latest
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       drupal-core: ['9.4.x', '10.0.x']
-  #       php-versions: ['7.4', '8.0', '8.1', '8.2']
-  #       exclude:
-  #         -
-  #           drupal-core: '10.0.x'
-  #           php-versions: '7.4'
-  #         -
-  #           drupal-core: '10.0.x'
-  #           php-versions: '8.0'
-  #   steps:
-  #     - name: Checkout Drupal core
-  #       uses: actions/checkout@v3
-  #       with:
-  #         repository: drupal/drupal
-  #         ref: ${{ matrix.drupal-core }}
-
-  #     - name: Checkout module
-  #       uses: actions/checkout@v3
-  #       with:
-  #         path: modules/bluecadet_public_files
-
-  #     - name: Setup PHP, with composer and extensions
-  #       uses: shivammathur/setup-php@v2
-  #       with:
-  #         php-version: ${{ matrix.php-versions }}
-  #         coverage: none
-
-  #     - name: Get composer cache directory
-  #       id: composercache
-  #       # run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-  #       run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
-
-  #     - name: Cache composer dependencies
-  #       uses: actions/cache@v3
-  #       with:
-  #         path: ${{ steps.composercache.outputs.dir }}
-  #         key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-  #         restore-keys: ${{ runner.os }}-composer-
-
-  #     - name: Install Drupal core dependencies
-  #       run: |
-  #         composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
-
-  #     # - name: Install module dependencies
-  #     #   run: |
-  #     #     composer --no-interaction --no-progress require \
-  #     #       drupal/commerce
-
-  #     - name: Install Coder module
-  #       run: |
-  #         composer --dev --no-interaction --no-progress require \
-  #           drupal/coder:^8
-
-  #     - name: Check coding standards
-  #       run: |
-  #         ./vendor/bin/phpcs --config-set ignore_warnings_on_exit 1
-  #         ./vendor/bin/phpcs --config-set ignore_errors_on_exit 1
-  #         ./vendor/bin/phpcs -s --standard=Drupal --extensions=php,module,inc,install,test,profile,theme,css,info,txt --ignore=node_modules,bower_components,vendor,dist --exclude=Drupal.InfoFiles.AutoAddedKeys --colors ./modules/bluecadet_public_files
-  #         ./vendor/bin/phpcs -s --standard=DrupalPractice --extensions=php,module,inc,install,test,profile,theme,css,info,txt --ignore=node_modules,bower_components,vendor,dist --exclude=Drupal.InfoFiles.AutoAddedKeys --colors ./modules/bluecadet_public_files
-
-
-
 
   test:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        drupal-core: ['9.4.x', '9.5.x', '10.0.x']
+        drupal-core: ['10.0.x', '10.1.x', '10.2.x']
         php-version: ['8.0', '8.1', '8.2']
         mariadb-version: ['10.4', '10.6']
         exclude:
