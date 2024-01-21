@@ -62,6 +62,8 @@ class SiteTests extends ControllerBase implements ContainerInjectionInterface {
     $test_storage = $this->entityTypeManager()->getStorage('test');
     $tests = $test_storage->loadByProperties([
       'site' => $site->id(),
+      // todo: make this configureable or something.
+      'status' => 1,
     ]);
 
     foreach ($tests as $test) {
