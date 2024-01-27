@@ -10,7 +10,7 @@ dependencies:
 configure: esm_test_blc.blc_test_settings
 
 
-# Information added by packaging script on 2024-01-07
-version: 1.0.1-beta2
+# Information added by packaging script on 2024-01-27
+version: 1.0.1-beta3
 project: external_site_monitor
-datestamp: 1704655492627
+datestamp: 1706370069569
