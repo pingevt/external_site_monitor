@@ -5,10 +5,13 @@ namespace Drupal\esm_test_pchr\Plugin\EsmTestRunner;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Url;
+use Drupal\esm_site\Entity\Site;
 use Drupal\esm_test_base\Plugin\EsmTestRunnerInterface;
 use Drupal\esm_test_base\Plugin\EsmTestRunnerBase;
-use Drupal\esm_test_result_base\StatusBadge;
+use Drupal\esm_test_base\StatusBadge;
+use Drupal\esm_test_base\StatusBadgeStatus;
 use Drupal\esm_test_result_base\Entity\Result;
+use Drupal\external_site_monitor\EntityTypeBundleTrait;
 
 /**
  * Class PchrTestRunner runs the tag checker test.
@@ -20,6 +23,8 @@ use Drupal\esm_test_result_base\Entity\Result;
  * )
  */
 class PchrTestRunner extends EsmTestRunnerBase implements EsmTestRunnerInterface, ContainerFactoryPluginInterface {
+
+  use EntityTypeBundleTrait;
 
   protected $dataCache = [];
 
@@ -196,7 +201,7 @@ class PchrTestRunner extends EsmTestRunnerBase implements EsmTestRunnerInterface
     }
     $badge->addItem($status, number_format($latest_val, 2) . "%", "Latest Ratio");
 
-    // 7day.
+    // 7 day.
     $seven_val = $result->field_7_day->value;
     $status = "success";
     if ($seven_val <= 50) {
@@ -211,7 +216,7 @@ class PchrTestRunner extends EsmTestRunnerBase implements EsmTestRunnerInterface
     $badge->addItem($status, number_format($seven_val, 2) . "%", "7 day");
 
     // 30 day.
-    $thirty_val = $result->field_7_day->value;
+    $thirty_val = $result->field_30_day->value;
     $status = "success";
     if ($thirty_val <= 50) {
       $status = "warning";
@@ -225,6 +230,86 @@ class PchrTestRunner extends EsmTestRunnerBase implements EsmTestRunnerInterface
     $badge->addItem($status, number_format($thirty_val, 2) . "%", "30 day");
 
     return $badge;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getStatusBadgeSummary(Site $site): ?StatusBadge  {
+    // Grab Tests.
+    $tests = $site->getTests([
+      ['bundle', $this->pluginDefinition['test_type']],
+      ['status', '1'],
+    ]);
+
+    if (!empty($tests)) {
+
+      $data = array_fill(0, 3, 0);
+      $results_count = 0;
+      foreach ($tests as $test) {
+        foreach ($test->getTestingUrls() as $url_field_data) {
+          if ($result = $this->getMostRecentResult($test)) {
+            $data[0] += $result->field_latest_ratio->value;
+            $data[1] += $result->field_7_day->value;
+            $data[2] += $result->field_30_day->value;
+
+            $results_count++;
+          }
+        }
+      }
+
+      $data[0] = $data[0] / $results_count;
+      $data[1] = $data[1] / $results_count;
+      $data[2] = $data[2] / $results_count;
+
+      $badge = new StatusBadge();
+
+      $bundles = $this->entityTypeBundleInfo()->getBundleInfo('test');
+      $badge->addLabel($bundles[$this->pluginDefinition['test_type']]['label'] . " Summary");
+
+      // Latest.
+      $status = StatusBadgeStatus::Success;
+      if ($data[0] <= 50) {
+        $status = "warning";
+      }
+      if ($data[0] <= 70) {
+        $status = "error";
+      }
+      elseif ($data[0] <= 90) {
+        $status = "info";
+      }
+      $badge->addItem($status, number_format($data[0], 2) . "%", "Latest Ratio");
+
+      // 7 day.
+      $status = StatusBadgeStatus::Success;
+      if ($data[1] <= 50) {
+        $status = "warning";
+      }
+      if ($data[1] <= 70) {
+        $status = "error";
+      }
+      elseif ($data[1] <= 90) {
+        $status = "info";
+      }
+      $badge->addItem($status, number_format($data[1], 2) . "%", "7 day");
+
+      // 30 day.
+      $status = StatusBadgeStatus::Success;
+      if ($data[2] <= 50) {
+        $status = "warning";
+      }
+      if ($data[2] <= 70) {
+        $status = "error";
+      }
+      elseif ($data[2] <= 90) {
+        $status = "info";
+      }
+      $badge->addItem($status, number_format($data[2], 2) . "%", "30 day");
+
+      return $badge;
+    }
+
+    return new StatusBadge();
   }
 
   public function getDataChart($test, $span = 90) {

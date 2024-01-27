@@ -5,6 +5,7 @@ package: External Site Monitor
 core_version_requirement: ^9 || ^10
 dependencies:
   - external_site_monitor:external_site_monitor
+  - external_site_monitor:esm_site
 configure: entity.site.settings
 
 

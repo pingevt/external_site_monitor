@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\RevisionableContentEntityBase;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\esm_site\SiteInterface;
+use Drupal\esm_test_base\Entity\Test;
 use Drupal\user\UserInterface;
 
 /**
@@ -262,6 +263,29 @@ class Site extends RevisionableContentEntityBase implements SiteInterface {
       ->setDescription(t('The time that the site was last edited.'));
 
     return $fields;
+  }
+
+  /**
+   * Get all tests from this Site.
+   *
+   * Assume this is an admin level function and we are not checking access.
+   */
+  public function getTests(array $args = []): array {
+
+    // ksm($this);
+
+    $test_storage = $this->entityTypeManager()->getStorage('test');
+    $q = $test_storage->getQuery();
+    $q->accessCheck(FALSE);
+    $q->condition('site', $this->id());
+    foreach($args as $arg) {
+      $q->condition(...$arg);
+    }
+    $r = $q->execute();
+
+    // ksm($r);
+
+    return $test_storage->loadMultiple($r);
   }
 
 }

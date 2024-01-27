@@ -366,7 +366,7 @@ class Test extends RevisionableContentEntityBase implements TestInterface {
   }
 
   /**
-   * getMostRecentResult.
+   * Get most recent results of this test.
    */
   public function getMostRecentResult(array $args = []): ?Result {
 
@@ -390,4 +390,5 @@ class Test extends RevisionableContentEntityBase implements TestInterface {
     }
     return NULL;
   }
+
 }

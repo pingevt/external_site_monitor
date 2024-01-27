@@ -5,7 +5,7 @@ namespace Drupal\esm_test_base\Plugin\EsmTestRunner;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\esm_test_base\Plugin\EsmTestRunnerBase;
 use Drupal\esm_test_base\Plugin\EsmTestRunnerInterface;
-use Drupal\esm_test_result_base\StatusBadge;
+use Drupal\esm_test_base\StatusBadge;
 use Drupal\esm_test_result_base\Entity\Result;
 
 /**

@@ -10,7 +10,9 @@ use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
+use Drupal\esm_site\Entity\Site;
 use Drupal\esm_test_base\Entity\Test;
 
 /**
@@ -29,6 +31,9 @@ function esm_test_base_theme() {
       ],
       // 'template' => 'site-test-results',
       'base hook' => 'site_test_results',
+    ],
+    'status_badge' => [
+      'render element' => 'badge',
     ],
   ];
 }
@@ -121,6 +126,16 @@ function template_preprocess_test(array &$variables) {
  */
 function template_preprocess_site_test_results(array &$variables) {
 
+}
+
+/**
+ * Prepares variables for test list for a site.
+ *
+ * Default template: status-bade.html.twig.
+ */
+function template_preprocess_status_badge(array &$variables) {
+  $variables['attributes']['class'][] = "esm-status-badge";
+  $variables['title_attributes']['class'][] = "esm-status-badge--label";
 }
 
 /**
@@ -308,4 +323,18 @@ function esm_test_base_entity_operation(EntityInterface $entity) {
 
     return $operations;
   }
+}
+
+function esm_test_base_get_tests_by_site(Site $site, bool $status = FALSE): array {
+
+  $query = \Drupal::entityQuery('test');
+  $query->accessCheck(FALSE);
+  $query->condition('site', $site->id());
+  $query->condition('status', $status);
+  $query->sort('bundle');
+  $results = $query->execute();
+
+  $tests = \Drupal::entityTypeManager()->getStorage('test')->loadMultiple($results);
+
+  return $tests;
 }

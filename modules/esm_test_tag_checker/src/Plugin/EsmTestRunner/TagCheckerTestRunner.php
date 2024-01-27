@@ -4,9 +4,11 @@ namespace Drupal\esm_test_tag_checker\Plugin\EsmTestRunner;
 
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\esm_site\Entity\Site;
 use Drupal\esm_test_base\Plugin\EsmTestRunnerInterface;
 use Drupal\esm_test_base\Plugin\EsmTestRunnerBase;
-use Drupal\esm_test_result_base\StatusBadge;
+use Drupal\esm_test_base\StatusBadge;
+use Drupal\esm_test_base\StatusBadgeStatus;
 use Drupal\esm_test_result_base\Entity\Result;
 
 /**
@@ -250,17 +252,68 @@ class TagCheckerTestRunner extends EsmTestRunnerBase implements EsmTestRunnerInt
 
     $badge->addLabel(str_replace(['https://', "http://"], "", $result->field_url->uri));
 
-    $badge->addItem("info", ($result->field_meta_tag_count->value ?? "-"), "Meta Tag Count");
+    $badge->addItem(StatusBadgeStatus::Info, ($result->field_meta_tag_count->value ?? "-"), "Meta Tag Count");
 
     $dup_id_c = $result->field_duplicate_ids->value ?? "-";
     if ($dup_id_c > 0) {
       $badge->addItem("error", $dup_id_c, "Duplicate Ids");
     }
     else {
-      $badge->addItem("success", $dup_id_c, "Duplicate Ids");
+      $badge->addItem(StatusBadgeStatus::Success, $dup_id_c, "Duplicate Ids");
     }
 
     return $badge;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getStatusBadgeSummary(Site $site): ?StatusBadge  {
+    // Grab Tests.
+    $tests = $site->getTests([
+      ['bundle', $this->pluginDefinition['test_type']],
+      ['status', '1'],
+    ]);
+
+    if (!empty($tests)) {
+
+      $data = array_fill(0, 2, 0);
+      $results_count = 0;
+      foreach ($tests as $test) {
+        foreach ($test->getTestingUrls() as $url_field_data) {
+          if ($result = $this->getMostRecentResult($test, ['url' => $url_field_data['uri']])) {
+
+            $data[0] += $result->field_meta_tag_count->value;
+            $data[1] += $result->field_duplicate_ids->value;
+
+            $results_count++;
+          }
+        }
+      }
+
+      $data[0] = $data[0] / $results_count;
+      $data[1] = $data[1] / $results_count;
+
+      $badge = new StatusBadge('tag_checker_test');
+
+      $bundles = $this->entityTypeBundleInfo()->getBundleInfo('test');
+      $badge->addLabel($bundles[$this->pluginDefinition['test_type']]['label'] . " Summary");
+
+      // Meta Tag Count.
+      $badge->addItem(StatusBadgeStatus::Info, ($data[0] ?? "-"), "Avg Meta Tag Count");
+
+      //  Duplicate Ids.
+      if ($data[1] > 0) {
+        $badge->addItem("error", $data[1], "Avg Duplicate Ids");
+      }
+      else {
+        $badge->addItem(StatusBadgeStatus::Success, $data[1], "Avg Duplicate Ids");
+      }
+
+      return $badge;
+    }
+
+    return new StatusBadge();
   }
 
   /**

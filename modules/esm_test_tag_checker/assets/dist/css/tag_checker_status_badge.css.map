@@ -1,1 +1,0 @@
-{"version":3,"sources":["modules/esm_test_tag_checker/assets/src/scss/tag_checker_status_badge.scss"],"names":[],"mappings":"AAAA;EACE,+BAAgC,EAAE","file":"tag_checker_status_badge.css","sourcesContent":["div.esm-status-badge[data-test-type=\"tag_checker_test\"] {\n  grid-template-columns: 1fr 200px; }\n"]}

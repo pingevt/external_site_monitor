@@ -8,9 +8,11 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Url;
+use Drupal\esm_site\Entity\Site;
 use Drupal\esm_test_base\Plugin\EsmTestRunnerBase;
 use Drupal\esm_test_base\Plugin\EsmTestRunnerInterface;
-use Drupal\esm_test_result_base\StatusBadge;
+use Drupal\esm_test_base\StatusBadge;
+use Drupal\esm_test_base\StatusBadgeStatus;
 use Drupal\esm_test_result_base\Entity\Result;
 use Drupal\external_site_monitor\DateTimeTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -295,6 +297,76 @@ class LighthouseTestRunner extends EsmTestRunnerBase implements EsmTestRunnerInt
     }
 
     return $badge;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getStatusBadgeSummary(Site $site): ?StatusBadge  {
+    // Grab Tests.
+    $tests = $site->getTests([
+      ['bundle', $this->pluginDefinition['test_type']],
+      ['status', '1'],
+    ]);
+
+    if (!empty($tests)) {
+
+      $fields_to_check = [
+        "field_performance",
+        "field_best_practices",
+        "field_accessibility",
+        "field_seo",
+        "field_pwa",
+      ];
+
+      $data = array_fill(0, count($fields_to_check), 0);
+      $results_count = 0;
+      foreach ($tests as $test) {
+        foreach ($test->getTestingUrls() as $url_field_data) {
+          if ($result = $this->getMostRecentResult($test, ['url' => $url_field_data['uri']])) {
+
+            $data[0] += (float) $result->field_performance->value;
+            $data[1] += (float) $result->field_best_practices->value;
+            $data[2] += (float) $result->field_accessibility->value;
+            $data[3] += (float) $result->field_seo->value;
+            $data[4] += (float) $result->field_pwa->value;
+
+            $results_count++;
+          }
+        }
+      }
+
+      $data[0] = $data[0] / $results_count;
+      $data[1] = $data[1] / $results_count;
+      $data[2] = $data[2] / $results_count;
+      $data[3] = $data[3] / $results_count;
+      $data[4] = $data[4] / $results_count;
+
+      $badge = new StatusBadge($this->pluginDefinition['test_type']);
+
+      $bundles = $this->entityTypeBundleInfo()->getBundleInfo('test');
+      $badge->addLabel($bundles[$this->pluginDefinition['test_type']]['label'] . " Summary");
+
+      // Loop over values.
+      for ($i = 0; $i < 5; $i++) {
+        if ($data[$i] <= 0.5) {
+          $badge->addItem(StatusBadgeStatus::Error, number_format($data[$i], 2), str_replace("field_", "", $fields_to_check[$i]));
+        }
+        elseif ($data[$i] > 0.5 && $data[$i] <= 0.85) {
+          $badge->addItem(StatusBadgeStatus::Warning, number_format($data[$i], 2), str_replace("field_", "", $fields_to_check[$i]));
+        }
+        elseif ($data[$i] > 0.85 && $data[$i] <= 0.92) {
+          $badge->addItem(StatusBadgeStatus::Info, number_format($data[$i], 2), str_replace("field_", "", $fields_to_check[$i]));
+        }
+        elseif ($data[$i] > 0.92) {
+          $badge->addItem(StatusBadgeStatus::Success, number_format($data[$i], 2), str_replace("field_", "", $fields_to_check[$i]));
+        }
+      }
+
+      return $badge;
+    }
+
+    return new StatusBadge();
   }
 
 }

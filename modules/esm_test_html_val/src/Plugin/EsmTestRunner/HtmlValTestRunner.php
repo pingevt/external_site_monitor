@@ -7,11 +7,14 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\esm_site\Entity\Site;
 use Drupal\esm_test_base\Plugin\EsmTestRunnerBase;
 use Drupal\esm_test_base\Plugin\EsmTestRunnerInterface;
 use Drupal\esm_test_result_base\Entity\Result;
-use Drupal\esm_test_result_base\StatusBadge;
+use Drupal\esm_test_base\StatusBadge;
+use Drupal\esm_test_base\StatusBadgeStatus;
 use Drupal\external_site_monitor\DateTimeTrait;
+use Drupal\external_site_monitor\EntityTypeBundleTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -26,6 +29,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class HtmlValTestRunner extends EsmTestRunnerBase implements EsmTestRunnerInterface, ContainerFactoryPluginInterface {
 
   use DateTimeTrait;
+  use EntityTypeBundleTrait;
 
   /**
    * Entity Type Manager.
@@ -267,27 +271,90 @@ class HtmlValTestRunner extends EsmTestRunnerBase implements EsmTestRunnerInterf
 
     $badge->addLabel(str_replace(['https://', "http://"], "", $result->field_url->uri));
     if ($result->field_error->value !== NULL) {
-      $badge->addItem(($result->field_error->value > 1) ? "error" : "success", $result->field_error->value);
+      $badge->addItem(($result->field_error->value > 1) ? "error" : StatusBadgeStatus::Success, $result->field_error->value);
     }
     else {
-      $badge->addItem("info", "-");
+      $badge->addItem(StatusBadgeStatus::Info, "-");
     }
 
     if ($result->field_info->value !== NULL) {
-      $badge->addItem(($result->field_info->value > 1) ? "error" : "success", $result->field_info->value);
+      $badge->addItem(($result->field_info->value > 1) ? "error" : StatusBadgeStatus::Success, $result->field_info->value);
     }
     else {
-      $badge->addItem("info", "-");
+      $badge->addItem(StatusBadgeStatus::Info, "-");
     }
 
     if ($result->field_non_doc_error->value !== NULL) {
-      $badge->addItem(($result->field_non_doc_error->value > 1) ? "error" : "success", $result->field_non_doc_error->value);
+      $badge->addItem(($result->field_non_doc_error->value > 1) ? "error" : StatusBadgeStatus::Success, $result->field_non_doc_error->value);
     }
     else {
-      $badge->addItem("info", "-");
+      $badge->addItem(StatusBadgeStatus::Info, "-");
     }
 
     return $badge;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getStatusBadgeSummary(Site $site): ?StatusBadge  {
+    // Grab Tests.
+    $tests = $site->getTests([
+      ['bundle', $this->pluginDefinition['test_type']],
+      ['status', '1'],
+    ]);
+
+    if (!empty($tests)) {
+
+      $data = array_fill(0, 3, 0);
+      $results_count = 0;
+      foreach ($tests as $test) {
+        foreach ($test->getTestingUrls() as $url_field_data) {
+          if ($result = $this->getMostRecentResult($test, ['url' => $url_field_data['uri']])) {
+
+            $data[0] += $result->field_error->value;
+            $data[1] += $result->field_info->value;
+            $data[2] += $result->field_non_doc_error->value;
+
+            $results_count++;
+          }
+        }
+      }
+
+      $data[0] = $data[0] / $results_count;
+      $data[1] = $data[1] / $results_count;
+      $data[2] = $data[2] / $results_count;
+
+      $badge = new StatusBadge();
+
+      $bundles = $this->entityTypeBundleInfo()->getBundleInfo('test');
+      $badge->addLabel($bundles[$this->pluginDefinition['test_type']]['label'] . " Summary");
+
+      // Latest.
+      $status = StatusBadgeStatus::Success;
+      if ($data[0] > 0) {
+        $status = "error";
+      }
+      $badge->addItem($status, number_format($data[0], 2), "Errors");
+
+      // 7 day.
+      $status = StatusBadgeStatus::Success;
+      if ($data[1] > 0) {
+        $status = "error";
+      }
+      $badge->addItem($status, number_format($data[1], 2), "Infos");
+
+      // 30 day.
+      $status = StatusBadgeStatus::Success;
+      if ($data[2] > 0) {
+        $status = "error";
+      }
+      $badge->addItem($status, number_format($data[2], 2), "Non Doc error");
+
+      return $badge;
+    }
+
+    return new StatusBadge();
   }
 
 }

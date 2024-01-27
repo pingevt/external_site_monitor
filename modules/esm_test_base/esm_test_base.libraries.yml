@@ -5,3 +5,19 @@ tests:
       assets/dist/css/tests.css: {}
   dependencies:
     - external_site_monitor/esm_base
+
+status_badge:
+  version: VERSION
+  css:
+    layout:
+      assets/dist/css/status_badge.css: {}
+  dependencies:
+    - external_site_monitor/esm_base
+
+site_test_summary_block:
+  version: VERSION
+  css:
+    layout:
+      assets/dist/css/site_test_summary_block.css: {}
+  dependencies:
+    - external_site_monitor/status_badge

@@ -41,11 +41,11 @@ function template_preprocess_w3_result_message(array &$variables) {
   $variables['attributes']['class'][] = "ws-message";
 
   // Set Severity.
-  $variables['severity'] = isset($message_data->subType) ? $message_data->subType : $message_data->type;
+  $variables['severity'] = $message_data->subType?? $message_data->type;
   $variables['attributes']['class'][] = Html::cleanCssIdentifier("ws-message--" . $variables['severity']);
 
   // Set Message.
-  $variables['message'] = isset($message_data->message) ? $message_data->message : NULL;
+  $variables['message'] = $message_data->message?? NULL;
 
   // Position Info.
   if (isset($message_data->firstColumn) && isset($message_data->lastLine) && isset($message_data->lastColumn)) {

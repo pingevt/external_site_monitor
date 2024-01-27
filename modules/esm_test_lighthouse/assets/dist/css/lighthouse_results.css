@@ -36,5 +36,3 @@ td.val-rising span::after{
 td.val-falling span::after{
   border-top:8px solid var(--esm-c-error-dark);
   border-bottom:0px solid transparent; }
-
-/*# sourceMappingURL=lighthouse_results.css.map */

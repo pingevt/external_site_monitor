@@ -3,9 +3,10 @@
 namespace Drupal\esm_test_base\Plugin;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;
+use Drupal\esm_site\Entity\Site;
 use Drupal\esm_test_base\Entity\Test;
 use Drupal\esm_test_result_base\Entity\Result;
-use Drupal\esm_test_result_base\StatusBadge;
+use Drupal\esm_test_base\StatusBadge;
 
 /**
  * Defines an interface for EsmTestRunner plugins.
@@ -31,6 +32,11 @@ interface EsmTestRunnerInterface extends PluginInspectionInterface {
    * Provide status badge data on Given Result.
    */
   public function getStatusBadge(Result $result):StatusBadge;
+
+  /**
+   * Provide status badge data for a test type.
+   */
+  public function getStatusBadgeSummary(Site $site): ?StatusBadge ;
 
   /**
    * Provide status badge data on Given Result.

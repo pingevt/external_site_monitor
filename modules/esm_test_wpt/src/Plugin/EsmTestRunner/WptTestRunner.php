@@ -3,9 +3,11 @@
 namespace Drupal\esm_test_wpt\Plugin\EsmTestRunner;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\esm_site\Entity\Site;
 use Drupal\esm_test_base\Plugin\EsmTestRunnerInterface;
 use Drupal\esm_test_base\Plugin\EsmTestRunnerBase;
-use Drupal\esm_test_result_base\StatusBadge;
+use Drupal\esm_test_base\StatusBadge;
+use Drupal\esm_test_base\StatusBadgeStatus;
 use Drupal\esm_test_result_base\Entity\Result;
 
 /**
@@ -85,9 +87,50 @@ class WptTestRunner extends EsmTestRunnerBase implements EsmTestRunnerInterface,
     $badge = new StatusBadge();
 
     $badge->addLabel(str_replace(['https://', "http://"], "", $result->field_url->uri));
-    $badge->addItem("info", ($result->field_speed_index_f->value / 1000) . "s", "Speed Index");
+    $badge->addItem(StatusBadgeStatus::Info, ($result->field_speed_index_f->value / 1000) . "s", "Speed Index");
 
     return $badge;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getStatusBadgeSummary(Site $site): ?StatusBadge  {
+    // Grab Tests.
+    $tests = $site->getTests([
+      ['bundle', $this->pluginDefinition['test_type']],
+      ['status', '1'],
+    ]);
+
+    if (!empty($tests)) {
+
+      $data = array_fill(0, 1, 0);
+      $results_count = 0;
+      foreach ($tests as $test) {
+        foreach ($test->getTestingUrls() as $url_field_data) {
+          if ($result = $this->getMostRecentResult($test, ['url' => $url_field_data['uri']])) {
+
+            $data[0] = $result->field_speed_index_f->value;
+
+            $results_count++;
+          }
+        }
+      }
+
+      $data[0] = $data[0] / $results_count;
+
+      $badge = new StatusBadge($this->pluginDefinition['test_type']);
+
+      $bundles = $this->entityTypeBundleInfo()->getBundleInfo('test');
+      $badge->addLabel($bundles[$this->pluginDefinition['test_type']]['label'] . " Summary");
+
+      // Meta Tag Count.
+      $badge->addItem(StatusBadgeStatus::Info, ($data[0] ? ($data[0] / 1000) : "-"), "Speed Index");
+
+      return $badge;
+    }
+
+    return new StatusBadge();
   }
 
 }

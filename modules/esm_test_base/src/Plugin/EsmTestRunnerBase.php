@@ -9,10 +9,13 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\esm_site\Entity\Site;
 use Drupal\esm_test_base\Entity\Test;
 use Drupal\esm_test_result_base\Entity\Result;
-use Drupal\esm_test_result_base\StatusBadge;
+use Drupal\esm_test_base\StatusBadge;
+use Drupal\esm_test_base\StatusBadgeStatus;
 use Drupal\external_site_monitor\DateTimeTrait;
+use Drupal\external_site_monitor\EntityTypeBundleTrait;
 use Drupal\file\Entity\File;
 use Drupal\views\Views;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -25,6 +28,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class EsmTestRunnerBase extends PluginBase implements EsmTestRunnerInterface, ContainerFactoryPluginInterface {
 
   use DateTimeTrait;
+  use EntityTypeBundleTrait;
   use StringTranslationTrait;
 
   /**
@@ -101,8 +105,31 @@ class EsmTestRunnerBase extends PluginBase implements EsmTestRunnerInterface, Co
   /**
    * {@inheritdoc}
    */
-  public function getStatusBadge(Result $result):StatusBadge {
+  public function getStatusBadge(Result $result): StatusBadge {
     return new StatusBadge();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getStatusBadgeSummary(Site $site): ?StatusBadge {
+    $badge = new StatusBadge('site-summary');
+    $bundles = $this->entityTypeBundleInfo()->getBundleInfo('test');
+
+    $badge->addLabel($bundles[$this->pluginDefinition['test_type']]['label'] . " Summary");
+    $badge->addItem(StatusBadgeStatus::Success, "", "");
+
+    // Grab Tests.
+    $tests = $site->getTests([
+      ['bundle', $this->pluginDefinition['test_type']],
+      ['status', '1'],
+    ]);
+
+    if (empty($tests)) {
+      return NULL;
+    }
+
+    return $badge;
   }
 
   /**

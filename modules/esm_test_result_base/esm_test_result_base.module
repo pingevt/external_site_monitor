@@ -17,9 +17,6 @@ function esm_test_result_base_theme() {
     'result' => [
       'render element' => 'elements',
     ],
-    'status_badge' => [
-      'render element' => 'badge',
-    ],
   ];
 }
 
@@ -46,16 +43,6 @@ function template_preprocess_result(array &$variables) {
   $variables['attributes']['class'][] = "result--view-mode-" . Html::cleanCssIdentifier($variables['elements']['#view_mode']);
 
   $variables['status_badge'] = $result->getStatusBadge()->renderArray();
-}
-
-/**
- * Prepares variables for test list for a site.
- *
- * Default template: status-bade.html.twig.
- */
-function template_preprocess_status_badge(array &$variables) {
-  $variables['attributes']['class'][] = "esm-status-badge";
-  $variables['title_attributes']['class'][] = "esm-status-badge--label";
 }
 
 /**

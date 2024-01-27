@@ -26,7 +26,6 @@ div.esm-status-badge ul{
 div.esm-status-badge ul li{
       display:inline-block;
       margin:0;
-      padding:0 1rem;
       flex-grow:1;
       text-align:center; }
 
@@ -48,5 +47,3 @@ div.esm-status-badge ul li.sb-item--success{
 
 article.result .esm-status-badge{
   margin-bottom:0.5rem; }
-
-/*# sourceMappingURL=status_badge.css.map */
