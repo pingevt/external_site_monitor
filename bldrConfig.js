@@ -9,6 +9,7 @@ let drupal_modules = [
   "./modules/esm_test_pchr/",
   "./modules/esm_test_result_base/",
   "./modules/esm_test_tag_checker/",
+  "./modules/esm_test_timing_monitor/",
   "./modules/esm_test_wpt/",
   // "./modules/esm_url_group/",
 ];
