@@ -16,4 +16,4 @@ configure: entity.test_type.collection
 # Information added by packaging script on 2024-01-27
 version: 1.0.1-beta3
 project: external_site_monitor
-datestamp: 1706370069569
+datestamp: 1706415805877
