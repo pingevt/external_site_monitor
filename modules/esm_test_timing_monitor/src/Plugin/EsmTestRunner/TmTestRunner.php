@@ -11,7 +11,9 @@ use Drupal\esm_test_base\Plugin\EsmTestRunnerBase;
 use Drupal\esm_test_base\StatusBadge;
 use Drupal\esm_test_base\StatusBadgeStatus;
 use Drupal\esm_test_result_base\Entity\Result;
+use Drupal\external_site_monitor\DatabaseTrait;
 use Drupal\external_site_monitor\EntityTypeBundleTrait;
+use Drupal\external_site_monitor\HttpClientTrait;
 
 /**
  * Class TmTestRunner runs the tag checker test.
@@ -24,7 +26,9 @@ use Drupal\external_site_monitor\EntityTypeBundleTrait;
  */
 class TmTestRunner extends EsmTestRunnerBase implements EsmTestRunnerInterface, ContainerFactoryPluginInterface {
 
+  use DatabaseTrait;
   use EntityTypeBundleTrait;
+  use HttpClientTrait;
 
   protected $dataCache = [];
 
@@ -33,95 +37,140 @@ class TmTestRunner extends EsmTestRunnerBase implements EsmTestRunnerInterface, 
    */
   public function runTest($test) {
 
-    // // Grab config.
-    // $config = $this->configFactory->get('esm_test_timing_monitor.settings');
+    // Grab config.
+    $config = $this->configFactory->get('esm_test_timing_monitor.settings');
 
-    // // Set Time for this report.
-    // $created = new \DateTime("now", $this->utcTz());
-    // $created->setTimezone($this->utcTz());
-    // $timestamp = $created->format("Ymd-His");
+    // Set Time for this report.
+    $created = new \DateTime("now", $this->utcTz());
+    $created->setTimezone($this->utcTz());
+    $timestamp = $created->format("Ymd-His");
 
-    // // Prepare Directory.
-    // $target_dir = $config->get('dir') . "/" . $timestamp;
-    // $short_dir = explode("://", $target_dir)[1];
-    // $this->fileSystem->prepareDirectory($target_dir, FileSystemInterface::CREATE_DIRECTORY);
+    // Prepare Directory.
+    $target_dir = $config->get('dir') . "/" . $timestamp;
+    $short_dir = explode("://", $target_dir)[1];
+    $this->fileSystem->prepareDirectory($target_dir, FileSystemInterface::CREATE_DIRECTORY);
 
-    // $urls = $test->getTestingUrls();
-    // $url_field_data = current($urls);
+    $urls = $test->getTestingUrls();
+    $url_field_data = current($urls);
 
-    // // We always use the same result.
-    // // If no result yet, create the result.
-    // if (!($result = $this->getMostRecentResult($test, ['test' => $test->id()]))) {
-    //   // Create Result.
-    //   $result = Result::create([
-    //     'bundle' => $this->pluginDefinition['test_result_type'],
-    //     'created' => $created->getTimestamp(),
-    //     'title' => "Test Results for " . $test->label(),
-    //     'test' => $test->id(),
-    //   ]);
-    //   $result->save();
-    // }
+    $days = 14;
 
-    // if ($config->get('github_token')) {
-    //   $key_storage = $this->entityTypeManager->getStorage("key");
-    //   $key = $key_storage->load($config->get('github_token'));
+    // We always use the same result.
+    // If no result yet, create the result.
+    if (!($result = $this->getMostRecentResult($test, ['test' => $test->id()]))) {
+      // Create Result.
+      $result = Result::create([
+        'bundle' => $this->pluginDefinition['test_result_type'],
+        'created' => $created->getTimestamp(),
+        'title' => "Test Results for " . $test->label(),
+        'test' => $test->id(),
+      ]);
+      $result->save();
 
-    //   $callback_url = Url::fromRoute('esm_test_timing_monitor.pchr_results', ['test' => $test->id()], ['absolute' => TRUE])->toString();
+      $days = 35;
+    }
 
-    //   $post_data = [
-    //     'ref' => $config->get('branch'),
-    //     'inputs' => [
-    //       'panth-site' => $test->field_pantheon_site_name->value,
-    //       'panth-env' => $test->field_pantheon_site_env->value,
-    //       'callback' => $callback_url,
-    //     ],
-    //   ];
+    if ($config->get('api_key')) {
+      $key_storage = $this->entityTypeManager->getStorage("key");
+      $key = $key_storage->load($config->get('api_key'));
 
-    //   // ksm($post_data);
+      $headers = [
+        'api-key' => $key->getKeyValue(),
+      ];
 
-    //   $auth_string = 'Authorization: Bearer ' . $key->getKeyValue();
+      $options = [
+        'headers' => $headers,
+        'http_errors' => FALSE,
+      ];
 
-    //   // ksm($auth_string);
+      $api_url = $url_field_data['uri'];
+      $api_url .= "/api/timing-monitor/";
+      $api_url .= $test->field_tm_type->value;
+      $api_url .= "/daily-average?days=" . $days;
 
-    //   $this->loggerFactory->get('esm:pchr')->debug("Attempting to Call Github Action: <pre>" . print_r([
-    //     $config->get('api_url'),
-    //     $post_data,
-    //   ], TRUE) . "</pre>", []);
+      $this->loggerFactory->get('esm:tm')->debug("Attempting to call Target Site: <pre>" . print_r([
+        $api_url,
+      ], TRUE) . "</pre>", []);
 
-    //   $ch = curl_init($config->get('api_url'));
-    //   curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-    //   curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post_data));
-    //   curl_setopt($ch, CURLOPT_HTTPHEADER, [
-    //     'User-Agent: Curl/2000',
-    //     'Accept: application/vnd.github+json',
-    //     'Content-Type: application/json',
-    //     $auth_string,
-    //   ]);
+      $httpClient = $this->httpClient();
 
-    //   $response = curl_exec($ch);
+      $response = $this->httpClient()->get($api_url, $options);
+      // ksm($response, $response->getBody()->getContents());
+      $contents = $response->getBody()->getContents();
 
-    //   $response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-    //   $this->loggerFactory->get('esm:pchr')->debug("Response Code: @code", ["@code" => $response_code]);
-    //   $this->loggerFactory->get('esm:pchr')->debug("Response: @response", ["@response" => $response]);
-    //   $this->loggerFactory->get('esm:pchr')->debug("Response: @response", ["@response" => json_decode($response)]);
+      $this->loggerFactory->get('esm:tm')->debug("Response Code: @code", ["@code" => $response->getStatusCode()]);
+      $this->loggerFactory->get('esm:tm')->debug("Contents: @contents", ["@contents" => $contents]);
 
-    //   if ($errno = curl_errno($ch)) {
-    //     $error_message = curl_strerror($errno);
-    //     $this->loggerFactory->get('esm:pchr')->error("cURL erro ({@errno}): @err", [
-    //       "@errno" => $errno,
-    //       "@err" => $error_message,
-    //     ]);
-    //   }
+      if ($response->getStatusCode() == 200) {
+        $return_data = json_decode($contents);
 
-    //   // Close the connection, release resources used.
-    //   curl_close($ch);
+        // Handle return data.
+        // Grab current data so we can update/merge properly.
+        $query = $this->database()->select("esm_tm_daily_data", 'tm');
+        $query->fields('tm', []);
+        $query->condition('result', $result->id());
+        $query->range(0, 35);
+        $query->orderBy('period', 'DESC');
+        $exisitng_data = $query->execute()->fetchAll();
 
-    //   $test->setNewRevision();
-    //   $test->revision_log = "Tests Run";
-    //   $test->last_run = $created->format("Y-m-d\TH:i:s");
-    //   $test->save();
-    // }
+        $exisitng_data_assoc = [];
+        foreach ($exisitng_data as $ed) {
+          $exisitng_data_assoc[$ed->period] = $ed;
+        }
+
+        $data_to_update = [];
+        $data_to_insert = [];
+        foreach ($return_data->data->dates as $date => $day_data) {
+
+          if (isset($exisitng_data_assoc[$date])) {
+            $data_to_update[] = array_merge((array) $exisitng_data_assoc[$date], [
+              'period' => $date,
+              'average' => is_null($day_data) ? NULL : (float) $day_data,
+            ]);
+          }
+          else {
+            $data_to_insert[] = [
+              'result' => (int) $result->id(),
+              'period' => $date,
+              'average' => is_null($day_data) ? NULL : (float) $day_data,
+            ];
+          }
+        }
+
+        // Update Queries.
+        if (!empty($data_to_update)) {
+          foreach ($data_to_update as $u) {
+            $updateq = $this->database->update('esm_tm_daily_data');
+            $updateq->fields($u);
+            $updateq->condition('id', $u['id']);
+            $updateq->execute();
+          }
+        }
+
+        // Insert Queries.
+        if (!empty($data_to_insert)) {
+          $insertq = $this->database->insert('esm_tm_daily_data');
+          $insertq->fields(array_keys($data_to_insert[0]));
+          foreach($data_to_insert as $di) {
+            $insertq->values($di);
+          }
+          $insertq->execute();
+        }
+
+        // Save Result and hook will update fields.
+        $result->save();
+      }
+      else {
+        $this->loggerFactory->get('esm:tm')->error("ERROR calling Target Site: @site", ["@site" => $api_url]);
+      }
+
+      // Set Test Data.
+      $test->setNewRevision();
+      $test->revision_log = "Tests Run";
+      $test->last_run = $created->format("Y-m-d\TH:i:s");
+      $test->save();
+    }
   }
 
   /**

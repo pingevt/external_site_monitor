@@ -16,7 +16,7 @@ use Drupal\Core\Url;
  */
 function esm_test_timing_monitor_theme() {
   return [
-    'site_test_results__pchr_test' => [
+    'site_test_results__tm_test' => [
       'variables' => [
         'test' => NULL,
         'title' => "",
@@ -24,7 +24,7 @@ function esm_test_timing_monitor_theme() {
       ],
       'base hook' => 'site_test_results',
     ],
-    'result__pchr_test_result' => [
+    'result__tm_test_result' => [
       'base hook' => 'result',
     ],
   ];
@@ -33,7 +33,7 @@ function esm_test_timing_monitor_theme() {
 /**
  * Implements hook_preprocess_THEME().
  */
-function esm_test_timing_monitor_preprocess_site_test_results__pchr_test(&$variables) {
+function esm_test_timing_monitor_preprocess_site_test_results__tm_test(&$variables) {
 
   foreach ($variables['content']['data'] as &$url_group) {
     if (isset($url_group['#attributes'])) {
@@ -54,7 +54,7 @@ function esm_test_timing_monitor_preprocess_site_test_results__pchr_test(&$varia
   }
 
   // Add in libraries.
-  $variables['libraries']['#attached']['library'][] = 'esm_test_timing_monitor/pchr_results';
+  $variables['libraries']['#attached']['library'][] = 'esm_test_timing_monitor/tm_results';
 }
 
 /**
@@ -63,7 +63,7 @@ function esm_test_timing_monitor_preprocess_site_test_results__pchr_test(&$varia
 // function esm_test_timing_monitor_preprocess_views_view_table(&$variables) {
 //   $view = $variables['view'];
 
-//   if ($view->id() == "pchr_test_results" && $view->getDisplay()->display['id'] == "base") {
+//   if ($view->id() == "tm_test_results" && $view->getDisplay()->display['id'] == "base") {
 //     $handler = $view->style_plugin;
 
 //     // Set Raw Values.
@@ -114,27 +114,23 @@ function esm_test_timing_monitor_preprocess_result(&$variables) {
   $result = $variables['elements']['#result'];
   $view_mode = $variables['elements']['#view_mode'];
 
-  if ($result->bundle() == "pchr_test_result" && $view_mode == "full") {
+  if ($result->bundle() == "tm_test_result" && $view_mode == "full") {
 
     // Set up chart.
     $runnerManager = \Drupal::service('plugin.manager.esm_test_runner');
     $test = $result->test->entity;
-    $plugin_id = "pchr_test_runner";
+    $plugin_id = "tm_test_runner";
     $runner = $runnerManager->createInstance($plugin_id);
     $variables['chart'] = $runner->getDataChart($test, 30);
 
 
     $table = [
       '#type' => "table",
-      '#caption' => "Cache Hit Ratio",
-      '#attributes' => ['class' => ["pchr-results-full"]],
+      '#caption' => "Average Execution Times",
+      '#attributes' => ['class' => ["tm-results-full"]],
       '#header' => [
         "Period",
-        "Visits",
-        "Pages Served",
-        "Cache Hits",
-        "Cache Misses",
-        "Cache Hit Ratio",
+        "Average Execution Times",
         "7 day running",
         "30 day running",
       ],
@@ -145,35 +141,25 @@ function esm_test_timing_monitor_preprocess_result(&$variables) {
     $rows = [];
     list(
       $period,
-      $visits,
-      $pages_served,
-      $cache_hits,
-      $cache_misses,
-      $cache_hit_ratios,
+      $average,
       $running7_ratios,
       $running30_ratios,
     ) = $runner->getData($test);
 
     foreach ($period as $i => $p) {
-      // $data->cache_hit_ratio .= "%";
       $rows[] = [
         $period[$i],
-        $visits[$i],
-        $pages_served[$i],
-        $cache_hits[$i],
-        $cache_misses[$i],
-        number_format($cache_hit_ratios[$i], 2) . "%",
-        ($running7_ratios[$i]) ? number_format($running7_ratios[$i], 2) . "%" : "-",
-        ($running30_ratios[$i]) ? number_format($running30_ratios[$i], 2) . "%" : "-",
+        $average[$i],
+        ($running7_ratios[$i]) ? number_format($running7_ratios[$i], 2) : "-",
+        ($running30_ratios[$i]) ? number_format($running30_ratios[$i], 2) : "-",
       ];
     }
-
 
     $table['#rows'] = array_reverse($rows);
     $variables['table'] = $table;
 
     // Attach Library.
-    $variables['libraries']['#attached']['library'][] = "esm_test_timing_monitor/pchr_results";
+    $variables['libraries']['#attached']['library'][] = "esm_test_timing_monitor/tm_results";
   }
 }
 
@@ -188,10 +174,10 @@ function esm_test_timing_monitor_result_presave($entity) {
  * Update the Result entity based on saved json Report.
  */
 function esm_test_timing_monitor_update_result($entity) {
-  if ($entity->bundle() == "pchr_test_result") {
+  if ($entity->bundle() == "tm_test_result") {
 
     // Grab last 30 days.
-    $query = \Drupal::database()->select("esm_pchr_data", 'ep');
+    $query = \Drupal::database()->select("esm_tm_daily_data", 'ep');
     $query->fields('ep', []);
     $query->condition('result', $entity->id());
     $query->range(0, 30);
@@ -205,15 +191,15 @@ function esm_test_timing_monitor_update_result($entity) {
 
     foreach ($exisitng_data as $i => $data) {
       if ($i == 0) {
-        $entity->field_latest_ratio = $data->cache_hit_ratio;
+        $entity->field_latest_avg = $data->average;
       }
       if ($i < 7) {
         $count7++;
-        $count7_sum += $data->cache_hit_ratio;
+        $count7_sum += $data->average;
       }
       if ($i < 30) {
         $count30++;
-        $count30_sum += $data->cache_hit_ratio;
+        $count30_sum += $data->average;
       }
     }
 
