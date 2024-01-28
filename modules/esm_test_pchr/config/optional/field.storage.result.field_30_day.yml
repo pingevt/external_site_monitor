@@ -1,0 +1,17 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - esm_test_result_base
+id: result.field_30_day
+field_name: field_30_day
+entity_type: result
+type: float
+settings: {  }
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

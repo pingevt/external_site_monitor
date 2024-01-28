@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - esm_test_base.test_type.tm_test
+    - field.storage.test.field_tm_api_key
+id: test.tm_test.field_tm_api_key
+field_name: field_tm_api_key
+entity_type: test
+bundle: tm_test
+label: 'API Key'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:key'
+  handler_settings:
+    target_bundles: null
+    auto_create: false
+field_type: entity_reference

@@ -1,0 +1,7 @@
+tm_results:
+  version: VERSION
+  css:
+    layout:
+      assets/dist/css/tm_results.css: {}
+  dependencies:
+    - esm_test_base/tests

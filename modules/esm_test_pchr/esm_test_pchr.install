@@ -21,7 +21,7 @@ function _esm_test_pchr_schemas() {
 
   // Sitemaps Table.
   $schema['esm_pchr_data'] = [
-    'description' => 'A table to store blc links.',
+    'description' => 'A table to store pchr data.',
     'fields' => [
       'id' => [
         'description' => 'The unique ID',
@@ -102,3 +102,5 @@ function esm_test_pchr_update_9001() {
   $schema = Database::getConnection()->schema();
   $schema->createTable('esm_pchr_data', $my_schemas['esm_pchr_data']);
 }
+
+// todo: create hook update to change table description.

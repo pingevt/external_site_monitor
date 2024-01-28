@@ -1,0 +1,102 @@
+<?php
+
+/**
+ * @file
+ * Provides un/install functionality.
+ */
+
+use Drupal\Core\Database\Database;
+
+/**
+ * Implements hook_schema().
+ */
+function esm_test_timing_monitor_schema() {
+  return _esm_test_timing_monitor_schemas();
+}
+
+/**
+ * Custom schema for BLC tables.
+ */
+function _esm_test_timing_monitor_schemas() {
+  $schema = [];
+
+  // Sitemaps Table.
+  // $schema['esm_pchr_data'] = [
+  //   'description' => 'A table to store blc links.',
+  //   'fields' => [
+  //     'id' => [
+  //       'description' => 'The unique ID',
+  //       'type' => 'serial',
+  //       'unsigned' => TRUE,
+  //       'not null' => TRUE,
+  //     ],
+  //     'result' => [
+  //       'description' => 'The result this sitemap belongs to.',
+  //       'type' => 'int',
+  //       'unsigned' => TRUE,
+  //       'not null' => TRUE,
+  //       'default' => 0,
+  //     ],
+  //     'period' => [
+  //       'description' => '',
+  //       'type' => 'varchar',
+  //       'length' => '20',
+  //       'not null' => TRUE,
+  //     ],
+  //     'visits' => [
+  //       'description' => '',
+  //       'type' => 'int',
+  //       'unsigned' => TRUE,
+  //       'not null' => TRUE,
+  //       'default' => 0,
+  //     ],
+  //     'pages_served' => [
+  //       'description' => '',
+  //       'type' => 'int',
+  //       'unsigned' => TRUE,
+  //       'not null' => TRUE,
+  //       'default' => 0,
+  //     ],
+  //     'cache_hits' => [
+  //       'description' => '',
+  //       'type' => 'int',
+  //       'unsigned' => TRUE,
+  //       'not null' => TRUE,
+  //       'default' => 0,
+  //     ],
+  //     'cache_misses' => [
+  //       'description' => '',
+  //       'type' => 'int',
+  //       'unsigned' => TRUE,
+  //       'not null' => TRUE,
+  //       'default' => 0,
+  //     ],
+  //     'cache_hit_ratio' => [
+  //       'description' => '',
+  //       'type' => 'float',
+  //       'size' => 'normal',
+  //       'unsigned' => TRUE,
+  //       'not null' => TRUE,
+  //       'default' => 0,
+  //     ],
+  //   ],
+  //   'primary key' => ['id'],
+  //   'foreign keys' => [
+  //     'result' => [
+  //       'table' => 'result',
+  //       'columns' => [
+  //         'result' => 'id',
+  //       ],
+  //     ],
+  //   ],
+  // ];
+
+  return $schema;
+}
+
+/**
+ * Add esm_pchr_data table.
+ */
+// function esm_test_timing_monitor_update_9001() {
+
+// }

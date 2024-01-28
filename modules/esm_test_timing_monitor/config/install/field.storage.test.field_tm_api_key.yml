@@ -1,0 +1,19 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - esm_test_base
+    - key
+id: test.field_tm_api_key
+field_name: field_tm_api_key
+entity_type: test
+type: entity_reference
+settings:
+  target_type: key
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

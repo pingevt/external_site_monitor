@@ -1,0 +1,5 @@
+esm_test_timing_monitor.tm_test_settings:
+  title: Timing Monitor Settings
+  parent: external_site_monitor.admin_config
+  route_name: esm_test_timing_monitor.tm_test_settings
+  weight: 13

@@ -1,0 +1,24 @@
+<article{{ attributes }}>
+  {{- status_badge -}}
+
+  {% if content %}
+
+    {{- content|without('field_latest_ratio', 'field_7_day', 'field_30_day') -}}
+
+
+    <div class="pch-fields">
+      {{ content.field_latest_ratio }}
+      {{ content.field_7_day }}
+      {{ content.field_30_day }}
+    </div>
+
+    {{ chart }}
+
+    {{ table }}
+
+  {% endif %}
+
+  {{ libraries }}
+</article>
+
+

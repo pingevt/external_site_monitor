@@ -3,11 +3,8 @@ status: true
 dependencies:
   module:
     - esm_test_result_base
-  enforced:
-    module:
-      - esm_test_pchr
-id: result.field_30_day
-field_name: field_30_day
+id: result.field_7_day
+field_name: field_7_day
 entity_type: result
 type: float
 settings: {  }

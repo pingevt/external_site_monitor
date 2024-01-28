@@ -1,0 +1,18 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - esm_test_base.test_type.tm_test
+    - field.storage.test.field_tm_type
+id: test.tm_test.field_tm_type
+field_name: field_tm_type
+entity_type: test
+bundle: tm_test
+label: 'Timing Monitor Type'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

@@ -1,0 +1,9 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - esm_test_timing_monitor
+id: tm_test
+label: 'Timing Monitor Daily Test'
+allow_manual: false

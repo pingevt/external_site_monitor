@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - esm_test_timing_monitor
+id: tm_test_result
+label: 'Timing Monitor Test Result'

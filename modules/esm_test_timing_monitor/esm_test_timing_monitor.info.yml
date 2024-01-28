@@ -1,0 +1,13 @@
+name: 'External Site Monitor: Timing Monitor results'
+type: module
+description: 'Provides data for Timing Monitor results'
+package: External Site Monitor
+core_version_requirement: ^10
+dependencies:
+  - external_site_monitor:esm_test_base
+  - external_site_monitor:esm_test_result_base
+
+configure: esm_test_timing_monitor.tm_test_settings
+
+
+

@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - esm_test_result_base.result_type.tm_test_result
+    - field.storage.result.field_30_day
+id: result.tm_test_result.field_30_day
+field_name: field_30_day
+entity_type: result
+bundle: tm_test_result
+label: '30 day running'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: '%'
+field_type: float

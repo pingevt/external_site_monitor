@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - esm_test_result_base.result_type.tm_test_result
+    - field.storage.result.field_latest_avg
+id: result.tm_test_result.field_latest_avg
+field_name: field_latest_avg
+entity_type: result
+bundle: tm_test_result
+label: 'Latest Average'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: float
