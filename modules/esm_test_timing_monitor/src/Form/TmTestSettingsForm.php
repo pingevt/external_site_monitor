@@ -10,7 +10,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Configure External Site Monitor: Web Page Test settings for this site.
  */
-class PchrTestSettingsForm extends ConfigFormBase {
+class TmTestSettingsForm extends ConfigFormBase {
 
   /**
    * Entity Type Manager.
@@ -100,7 +100,7 @@ class PchrTestSettingsForm extends ConfigFormBase {
     $this->config('esm_test_timing_monitor.settings')
       // ->set('branch', $form_state->getValue('branch'))
       // ->set('api_url', $form_state->getValue('api_url'))
-      ->set('api_key', $form_state->getValue('github_token'))
+      ->set('api_key', $form_state->getValue('api_key'))
       ->set('dir', $form_state->getValue('dir'))
       ->save();
     parent::submitForm($form, $form_state);
