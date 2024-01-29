@@ -3,11 +3,11 @@
 
   {% if content %}
 
-    {{- content|without('field_latest_ratio', 'field_7_day', 'field_30_day') -}}
+    {{- content|without('field_average', 'field_7_day', 'field_30_day') -}}
 
 
-    <div class="pch-fields">
-      {{ content.field_latest_ratio }}
+    <div class="tm-fields">
+      {{ content.field_average }}
       {{ content.field_7_day }}
       {{ content.field_30_day }}
     </div>

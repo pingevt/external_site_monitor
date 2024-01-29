@@ -67,7 +67,7 @@ class TmTestRunner extends EsmTestRunnerBase implements EsmTestRunnerInterface, 
       ]);
       $result->save();
 
-      $days = 35;
+      $days = 60;
     }
 
     if ($config->get('api_key')) {
@@ -177,11 +177,11 @@ class TmTestRunner extends EsmTestRunnerBase implements EsmTestRunnerInterface, 
    * {@inheritdoc}
    */
   public function buildResultsSummary($test, &$build) {
-
-    // if ($result = $this->getMostRecentResult($test)) {
-    //   $badge = $this->getStatusBadge($result);
-    //   $build['status_' . $result->id()] = $badge->renderArray();
-    // }
+    ksm('buildResultsSummary');
+    if ($result = $this->getMostRecentResult($test)) {
+      $badge = $this->getStatusBadge($result);
+      $build['status_' . $result->id()] = $badge->renderArray();
+    }
 
   }
 
@@ -196,30 +196,30 @@ class TmTestRunner extends EsmTestRunnerBase implements EsmTestRunnerInterface, 
       '#title' => $test->label() . " Results",
     ];
 
-    // $views = [];
-    // $views[] = [
-    //   '#attributes' => [
-    //     'class' => ["o-url-result"],
-    //   ],
-    //   "group" => [
-    //     [
-    //       '#attributes' => [
-    //         'class' => ["o-url-result--chart"],
-    //       ],
-    //       'view' => $this->getDataChart($test),
-    //     ],
-    //     [
-    //       '#attributes' => [
-    //         'class' => ["o-url-result--table"],
-    //       ],
-    //       'view' => views_embed_view("tm_test_results", "base", $test->id()),
-    //     ],
-    //   ],
-    // ];
+    $views = [];
+    $views[] = [
+      '#attributes' => [
+        'class' => ["o-url-result"],
+      ],
+      "group" => [
+        [
+          '#attributes' => [
+            'class' => ["o-url-result--chart"],
+          ],
+          'view' => $this->getDataChart($test),
+        ],
+        [
+          '#attributes' => [
+            'class' => ["o-url-result--table"],
+          ],
+          'view' => views_embed_view("tm_test_results", "base", $test->id()),
+        ],
+      ],
+    ];
 
-    // $build['#content'] = [
-    //   "data" => $views,
-    // ];
+    $build['#content'] = [
+      "data" => $views,
+    ];
   }
 
   /**
@@ -227,56 +227,56 @@ class TmTestRunner extends EsmTestRunnerBase implements EsmTestRunnerInterface, 
    */
   public function getStatusBadge(Result $result):StatusBadge {
     $badge = new StatusBadge();
-    // $test = $result->test->entity;
+    $test = $result->test->entity;
 
-    // $s = "";
-    // $s .= $test->field_pantheon_site_name->value;
+    $s = "";
+    $s .= $test->label();
     // $s .= ".";
-    // $s .= $test->field_pantheon_site_env->value;
+    // $s .= $test->label();
 
-    // $badge->addLabel($s);
+    $badge->addLabel($s);
 
-    // // Latest.
-    // $latest_val = $result->field_latest_ratio->value;
-    // $status = "success";
-    // if ($latest_val <= 50) {
-    //   $status = "warning";
-    // }
-    // if ($latest_val <= 70) {
-    //   $status = "error";
-    // }
-    // elseif ($latest_val <= 90) {
-    //   $status = "info";
-    // }
-    // $badge->addItem($status, number_format($latest_val, 2) . "%", "Latest Ratio");
+    // Latest.
+    $latest_val = $result->field_latest_avg->value;
+    $status = "success";
+    if ($latest_val >= 0.05) {
+      $status = "warning";
+    }
+    if ($latest_val >= 0.1) {
+      $status = "error";
+    }
+    elseif ($latest_val >= 0.01) {
+      $status = "info";
+    }
+    $badge->addItem($status, number_format($latest_val, 4) . "s", "Latest Average");
 
-    // // 7 day.
-    // $seven_val = $result->field_7_day->value;
-    // $status = "success";
-    // if ($seven_val <= 50) {
-    //   $status = "warning";
-    // }
-    // if ($seven_val <= 70) {
-    //   $status = "error";
-    // }
-    // elseif ($seven_val <= 90) {
-    //   $status = "info";
-    // }
-    // $badge->addItem($status, number_format($seven_val, 2) . "%", "7 day");
+    // 7 day.
+    $seven_val = $result->field_7_day->value;
+    $status = "success";
+    if ($seven_val >= 0.05) {
+      $status = "warning";
+    }
+    if ($seven_val >= 0.1) {
+      $status = "error";
+    }
+    elseif ($seven_val >= 0.01) {
+      $status = "info";
+    }
+    $badge->addItem($status, number_format($seven_val, 4) . "s", "7 day");
 
-    // // 30 day.
-    // $thirty_val = $result->field_30_day->value;
-    // $status = "success";
-    // if ($thirty_val <= 50) {
-    //   $status = "warning";
-    // }
-    // if ($thirty_val <= 70) {
-    //   $status = "error";
-    // }
-    // elseif ($thirty_val <= 90) {
-    //   $status = "info";
-    // }
-    // $badge->addItem($status, number_format($thirty_val, 2) . "%", "30 day");
+    // 30 day.
+    $thirty_val = $result->field_30_day->value;
+    $status = "success";
+    if ($thirty_val >= 0.05) {
+      $status = "warning";
+    }
+    if ($thirty_val >= 0.1) {
+      $status = "error";
+    }
+    elseif ($thirty_val >= 0.01) {
+      $status = "info";
+    }
+    $badge->addItem($status, number_format($thirty_val, 4) . "s", "30 day");
 
     return $badge;
   }
@@ -291,275 +291,201 @@ class TmTestRunner extends EsmTestRunnerBase implements EsmTestRunnerInterface, 
       ['status', '1'],
     ]);
 
-    // if (!empty($tests)) {
+    if (!empty($tests)) {
 
-    //   $data = array_fill(0, 3, 0);
-    //   $results_count = 0;
-    //   foreach ($tests as $test) {
-    //     foreach ($test->getTestingUrls() as $url_field_data) {
-    //       if ($result = $this->getMostRecentResult($test)) {
-    //         $data[0] += $result->field_latest_ratio->value;
-    //         $data[1] += $result->field_7_day->value;
-    //         $data[2] += $result->field_30_day->value;
+      $data = array_fill(0, 3, 0);
+      $results_count = 0;
+      foreach ($tests as $test) {
+        foreach ($test->getTestingUrls() as $url_field_data) {
+          if ($result = $this->getMostRecentResult($test)) {
+            $data[0] += $result->field_latest_avg->value;
+            $data[1] += $result->field_7_day->value;
+            $data[2] += $result->field_30_day->value;
 
-    //         $results_count++;
-    //       }
-    //     }
-    //   }
+            $results_count++;
+          }
+        }
+      }
 
-    //   $data[0] = $data[0] / $results_count;
-    //   $data[1] = $data[1] / $results_count;
-    //   $data[2] = $data[2] / $results_count;
+      $data[0] = $data[0] / $results_count;
+      $data[1] = $data[1] / $results_count;
+      $data[2] = $data[2] / $results_count;
 
-    //   $badge = new StatusBadge();
+      $badge = new StatusBadge();
 
-    //   $bundles = $this->entityTypeBundleInfo()->getBundleInfo('test');
-    //   $badge->addLabel($bundles[$this->pluginDefinition['test_type']]['label'] . " Summary");
+      $bundles = $this->entityTypeBundleInfo()->getBundleInfo('test');
+      $badge->addLabel($bundles[$this->pluginDefinition['test_type']]['label'] . " Summary");
 
-    //   // Latest.
-    //   $status = StatusBadgeStatus::Success;
-    //   if ($data[0] <= 50) {
-    //     $status = "warning";
-    //   }
-    //   if ($data[0] <= 70) {
-    //     $status = "error";
-    //   }
-    //   elseif ($data[0] <= 90) {
-    //     $status = "info";
-    //   }
-    //   $badge->addItem($status, number_format($data[0], 2) . "%", "Latest Ratio");
+      // Latest.
+      $status = StatusBadgeStatus::Success;
+      if ($data[0] >= 0.05) {
+        $status = "warning";
+      }
+      if ($data[0] >= 0.1) {
+        $status = "error";
+      }
+      elseif ($data[0] >= 0.01) {
+        $status = "info";
+      }
+      $badge->addItem($status, number_format($data[0], 4) . "s", "Latest Ratio");
 
-    //   // 7 day.
-    //   $status = StatusBadgeStatus::Success;
-    //   if ($data[1] <= 50) {
-    //     $status = "warning";
-    //   }
-    //   if ($data[1] <= 70) {
-    //     $status = "error";
-    //   }
-    //   elseif ($data[1] <= 90) {
-    //     $status = "info";
-    //   }
-    //   $badge->addItem($status, number_format($data[1], 2) . "%", "7 day");
+      // 7 day.
+      $status = StatusBadgeStatus::Success;
+      if ($data[1] >= 0.05) {
+        $status = "warning";
+      }
+      if ($data[1] >= 0.1) {
+        $status = "error";
+      }
+      elseif ($data[1] >= 0.01) {
+        $status = "info";
+      }
+      $badge->addItem($status, number_format($data[1], 4) . "s", "7 day");
 
-    //   // 30 day.
-    //   $status = StatusBadgeStatus::Success;
-    //   if ($data[2] <= 50) {
-    //     $status = "warning";
-    //   }
-    //   if ($data[2] <= 70) {
-    //     $status = "error";
-    //   }
-    //   elseif ($data[2] <= 90) {
-    //     $status = "info";
-    //   }
-    //   $badge->addItem($status, number_format($data[2], 2) . "%", "30 day");
+      // 30 day.
+      $status = StatusBadgeStatus::Success;
+      if ($data[2] >= 0.05) {
+        $status = "warning";
+      }
+      if ($data[2] >= 0.1) {
+        $status = "error";
+      }
+      elseif ($data[2] >= 0.01) {
+        $status = "info";
+      }
+      $badge->addItem($status, number_format($data[2], 4) . "s", "30 day");
 
-    //   return $badge;
-    // }
+      return $badge;
+    }
 
     return new StatusBadge();
   }
 
   public function getDataChart($test, $span = 90) {
 
-    // list(
-    //   $labels,
-    //   $visits,
-    //   $pages_served,
-    //   $cache_hits,
-    //   $cache_misses,
-    //   $cache_hit_ratios,
-    //   $running7_ratios,
-    //   $running30_ratios,
-    // ) = $this->getData($test);
+    list(
+      $labels,
+      $averages,
+      $running7_ratios,
+      $running30_ratios,
+    ) = $this->getData($test);
 
-    // // Set spans.
-    // $labels = array_slice($labels, ($span * -1));
-    // $visits = array_slice($visits, ($span * -1));
-    // $pages_served = array_slice($pages_served, ($span * -1));
-    // $cache_hits = array_slice($cache_hits, ($span * -1));
-    // $cache_misses = array_slice($cache_misses, ($span * -1));
-    // $cache_hit_ratios = array_slice($cache_hit_ratios, ($span * -1));
-    // $running7_ratios = array_slice($running7_ratios, ($span * -1));
-    // $running30_ratios = array_slice($running30_ratios, ($span * -1));
+    // Set spans.
+    $labels = array_slice($labels, ($span * -1));
+    $averages = array_slice($averages, ($span * -1));
+    $running7_ratios = array_slice($running7_ratios, ($span * -1));
+    $running30_ratios = array_slice($running30_ratios, ($span * -1));
 
-    // // Build chart.
-    // $chart = [
-    //   'view' => [
-    //     '#type' => 'chart',
-    //     '#title' => 'Page Cache Hit Ratio Report',
-    //     '#chart_type' => 'line',
-    //     '#legend_position' => "bottom",
-    //     'y_axis' => [
-    //       '#type' => 'chart_yaxis',
-    //       '#title' => $this->t('%'),
-    //       '#min' => 0,
-    //       '#max' => 100,
-    //       '#opposite' => TRUE,
-    //     ],
-    //     'y_axis_secondary' => [
-    //       '#type' => 'chart_yaxis',
-    //       // '#title' => $this->t(''),
-    //       '#opposite' => FALSE,
-    //     ],
-    //     // 'y_axis_tertiary' => [
-    //     //   '#type' => 'chart_yaxis',
-    //     //   // '#title' => $this->t(''),
-    //     //   '#opposite' => FALSE,
-    //     //   '#stacking' => TRUE,
-    //     // ],
-    //     'series_visits' => [
-    //       '#type' => 'chart_data',
-    //       '#chart_type' => 'column',
-    //       '#title' => t('Visits'),
-    //       '#data' => $visits,
-    //       '#target_axis' => 'y_axis_secondary',
-    //       '#color' => "#32cafc",
-    //     ],
-    //     'pages_served' => [
-    //       '#type' => 'chart_data',
-    //       '#chart_type' => 'column',
-    //       '#title' => t('Pages Served'),
-    //       '#data' => $pages_served,
-    //       '#target_axis' => 'y_axis_secondary',
-    //       '#color' => "#97f7a2",
-    //     ],
+    // Build chart.
+    $chart = [
+      'view' => [
+        '#type' => 'chart',
+        '#title' => 'Average Execution Time Report',
+        '#chart_type' => 'line',
+        '#legend_position' => "bottom",
+        'y_axis' => [
+          '#type' => 'chart_yaxis',
+          '#title' => $this->t('%'),
+          '#min' => 0,
+          '#opposite' => TRUE,
+        ],
+        'series' => [
+          '#type' => 'chart_data',
+          '#title' => t('Averages'),
+          '#data' => $averages,
+          '#color' => "#d42d2d",
+        ],
+        'series7' => [
+          '#type' => 'chart_data',
+          '#title' => t('Averages - 7 Day running'),
+          '#data' => $running7_ratios,
+          '#color' => "#8d1a69",
+        ],
+        'series30' => [
+          '#type' => 'chart_data',
+          '#title' => t('Averages - 30 Day running'),
+          '#data' => $running30_ratios,
+          '#color' => "#000000",
+        ],
 
+        'xaxis' => [
+          '#type' => 'chart_xaxis',
+          '#title' => t('Days'),
+          '#labels' => $labels,
+        ],
+      ],
+    ];
 
-    //     // 'cache_hits' => [
-    //     //   '#type' => 'chart_data',
-    //     //   '#chart_type' => 'column',
-    //     //   '#title' => t('Cache Hits'),
-    //     //   '#data' => $cache_hits,
-    //     //   '#target_axis' => 'y_axis_tertiary',
-    //     //   '#stacking' => TRUE,
-    //     // ],
-    //     // 'cache_misses' => [
-    //     //   '#type' => 'chart_data',
-    //     //   '#chart_type' => 'column',
-    //     //   '#title' => t('Cache Misses'),
-    //     //   '#data' => $cache_misses,
-    //     //   '#target_axis' => 'y_axis_tertiary',
-    //     //   '#stacking' => TRUE,
-    //     // ],
-
-
-    //     'series30' => [
-    //       '#type' => 'chart_data',
-    //       '#title' => t('Cache Hit Ratio - 30 Day running'),
-    //       '#data' => $running30_ratios,
-    //       '#color' => "#000000",
-    //     ],
-    //     'series7' => [
-    //       '#type' => 'chart_data',
-    //       '#title' => t('Cache Hit Ratio - 7 Day running'),
-    //       '#data' => $running7_ratios,
-    //       '#color' => "#8d1a69",
-    //     ],
-    //     'series' => [
-    //       '#type' => 'chart_data',
-    //       '#title' => t('Cache Hit Ratio'),
-    //       '#data' => $cache_hit_ratios,
-    //       '#color' => "#d42d2d",
-    //     ],
-
-    //     'xaxis' => [
-    //       '#type' => 'chart_xaxis',
-    //       '#title' => t('Days'),
-    //       '#labels' => $labels,
-    //     ],
-    //   ],
-    // ];
-
-    // return $chart;
+    return $chart;
   }
 
   public function getData($test) {
 
-    // if (isset($this->dataCache[$test->id()])) {
-    //   return $this->dataCache[$test->id()];
-    // }
+    if (isset($this->dataCache[$test->id()])) {
+      return $this->dataCache[$test->id()];
+    }
 
-    // // Combine data.
-    // $result = $this->getMostRecentResult($test, ['test' => $test->id()]);
+    // Combine data.
+    $result = $this->getMostRecentResult($test, ['test' => $test->id()]);
 
-    // $query = \Drupal::database()->select("esm_pchr_data", 'ep');
-    // $query->fields('ep', []);
-    // $query->condition('result', $result->id());
-    // $query->range(0, 90);
-    // $query->orderBy('period', 'ASC');
-    // $exisitng_data = $query->execute()->fetchAll();
+    $query = \Drupal::database()->select("esm_tm_daily_data", 'ep');
+    $query->fields('ep', []);
+    $query->condition('result', $result->id());
+    $query->range(0, 90);
+    $query->orderBy('period', 'ASC');
+    $exisitng_data = $query->execute()->fetchAll();
 
-    // $labels = [];
-    // $visits = [];
-    // $pages_served = [];
-    // $cache_hits = [];
-    // $cache_misses = [];
-    // $cache_hit_ratios = [];
-    // $running7_items = [];
-    // $running7_ratios = [];
-    // $running30_items = [];
-    // $running30_ratios = [];
+    $labels = [];
+    $averages = [];
+    $running7_items = [];
+    $running7_ratios = [];
+    $running30_items = [];
+    $running30_ratios = [];
 
-    // foreach($exisitng_data as $i => $day_data) {
-    //   $labels[] = $day_data->period;
-    //   $visits[] = (int) $day_data->visits;
-    //   $pages_served[] = (int) $day_data->pages_served;
-    //   $cache_hits[] = (int) $day_data->cache_hits;
-    //   $cache_misses[] = (int) $day_data->cache_misses;
-    //   $cache_hit_ratios[] = (float) $day_data->cache_hit_ratio;
+    foreach($exisitng_data as $i => $day_data) {
+      $labels[] = $day_data->period;
+      $averages[] = (float) $day_data->average;
 
-    //   // 7 day.
-    //   if ($i < 7) {
-    //     $running7_items[] = (float) $day_data->cache_hit_ratio;
-    //     // $running7_ratios[] = NULL;
-    //   }
-    //   else {
-    //     array_shift($running7_items);
-    //     $running7_items[] = (float) $day_data->cache_hit_ratio;
-    //   }
-    //   $running7_ratios[] = ( array_reduce($running7_items, function ($carry, $item) {
-    //     $carry += $item;
-    //     return $carry;
-    //   }) / count($running7_items));
+      // 7 day.
+      if ($i < 7) {
+        $running7_items[] = (float) $day_data->average;
+      }
+      else {
+        array_shift($running7_items);
+        $running7_items[] = (float) $day_data->average;
+      }
+      $running7_ratios[] = ( array_reduce($running7_items, function ($carry, $item) {
+        $carry += $item;
+        return $carry;
+      }) / count($running7_items));
 
-    //   // 30 day.
-    //   if ($i < 30) {
-    //     $running30_items[] = (float) $day_data->cache_hit_ratio;
-    //     // $running30_ratios[] = NULL;
-    //   }
-    //   else {
-    //     array_shift($running30_items);
-    //     $running30_items[] = (float) $day_data->cache_hit_ratio;
-    //   }
-    //   $running30_ratios[] = ( array_reduce($running30_items, function ($carry, $item) {
-    //     $carry += $item;
-    //     return $carry;
-    //   }) / count($running30_items));
-    // }
+      // 30 day.
+      if ($i < 30) {
+        $running30_items[] = (float) $day_data->average;
+      }
+      else {
+        array_shift($running30_items);
+        $running30_items[] = (float) $day_data->average;
+      }
+      $running30_ratios[] = ( array_reduce($running30_items, function ($carry, $item) {
+        $carry += $item;
+        return $carry;
+      }) / count($running30_items));
+    }
 
-    // $this->dataCache[$test->id()] = [
-    //   $labels,
-    //   $visits,
-    //   $pages_served,
-    //   $cache_hits,
-    //   $cache_misses,
-    //   $cache_hit_ratios,
-    //   $running7_ratios,
-    //   $running30_ratios,
-    // ];
+    $this->dataCache[$test->id()] = [
+      $labels,
+      $averages,
+      $running7_ratios,
+      $running30_ratios,
+    ];
 
-    // return [
-    //   $labels,
-    //   $visits,
-    //   $pages_served,
-    //   $cache_hits,
-    //   $cache_misses,
-    //   $cache_hit_ratios,
-    //   $running7_ratios,
-    //   $running30_ratios,
-    // ];
+    return [
+      $labels,
+      $averages,
+      $running7_ratios,
+      $running30_ratios,
+    ];
   }
 
 }

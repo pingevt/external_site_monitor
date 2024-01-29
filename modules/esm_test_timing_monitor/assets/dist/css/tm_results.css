@@ -1,0 +1,25 @@
+.tm-fields{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr); }
+
+article.result--type-tm-test-result div.chart{
+  min-height:600px; }
+
+article.result--type-tm-test-result table{
+  margin:1rem auto 0;
+  min-width:80%;
+  border-spacing:0; }
+
+article.result--type-tm-test-result table caption{
+    font-weight:bold; }
+
+article.result--type-tm-test-result table thead tr{
+    background-color:var(--esm-c-gray-5); }
+
+article.result--type-tm-test-result table thead tr th{
+      padding:2px 1rem; }
+
+article.result--type-tm-test-result table td{
+    padding:2px 1rem;
+    border-bottom:1px solid var(--esm-c-gray-15);
+    text-align:center; }

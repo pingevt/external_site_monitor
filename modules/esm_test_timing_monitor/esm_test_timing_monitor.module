@@ -58,55 +58,6 @@ function esm_test_timing_monitor_preprocess_site_test_results__tm_test(&$variabl
 }
 
 /**
- * Implements hook_preprocess_views_view_table().
- */
-// function esm_test_timing_monitor_preprocess_views_view_table(&$variables) {
-//   $view = $variables['view'];
-
-//   if ($view->id() == "tm_test_results" && $view->getDisplay()->display['id'] == "base") {
-//     $handler = $view->style_plugin;
-
-//     // Set Raw Values.
-//     // foreach ($variables['rows'] as $index => &$row) {
-//     //   foreach ($row['columns'] as $field => &$field_data) {
-//     //     $raw_value = $handler->getFieldValue($index, $field);
-//     //     $row['columns'][$field]['raw'] = $raw_value;
-//     //   }
-//     // }
-
-//     // $fields_to_check = [
-//       // 'field_ttfb_f',
-//       // 'field_start_render_f',
-//       // 'field_fcp_f',
-//       // 'field_speed_index_f',
-//       // 'field_lcp_f',
-//       // 'field_cls_f',
-//       // 'field_tbt_f',
-//       // 'field_total_bytes_f',
-//     // ];
-
-//     // Set classes.
-//     // foreach ($variables['rows'] as $index => &$row) {
-//     //   foreach ($row['columns'] as $field => &$field_data) {
-//     //     if (in_array($field, $fields_to_check)) {
-//     //       $cur_val = (float) $field_data['raw'];
-
-//     //       if ($index < (count($variables['rows']) - 1)) {
-//     //         $prev_val = $variables['rows'][($index + 1)]['columns'][$field]['raw'];
-//     //         if ($cur_val > $prev_val) {
-//     //           $field_data['attributes']->addClass("val-rising");
-//     //         }
-//     //         elseif ($cur_val < $prev_val) {
-//     //           $field_data['attributes']->addClass("val-falling");
-//     //         }
-//     //       }
-//     //     }
-//     //   }
-//     // }
-//   }
-// }
-
-/**
  * Implements hook_preprocess_result().
  */
 function esm_test_timing_monitor_preprocess_result(&$variables) {
@@ -149,9 +100,9 @@ function esm_test_timing_monitor_preprocess_result(&$variables) {
     foreach ($period as $i => $p) {
       $rows[] = [
         $period[$i],
-        $average[$i],
-        ($running7_ratios[$i]) ? number_format($running7_ratios[$i], 2) : "-",
-        ($running30_ratios[$i]) ? number_format($running30_ratios[$i], 2) : "-",
+        number_format($average[$i], 6),
+        ($running7_ratios[$i]) ? number_format($running7_ratios[$i], 6) : "-",
+        ($running30_ratios[$i]) ? number_format($running30_ratios[$i], 6) : "-",
       ];
     }
 

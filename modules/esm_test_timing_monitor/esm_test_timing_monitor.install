@@ -67,7 +67,7 @@ function _esm_test_timing_monitor_schemas() {
 }
 
 /**
- * Add esm_pchr_data table.
+ * Add esm_tm_daily_data table.
  */
 // function esm_test_timing_monitor_update_9001() {
 
