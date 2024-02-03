@@ -6,11 +6,8 @@ dependencies:
     - esm_test_result_base.result_type.tm_test_result
     - field.storage.result.field_30_day
     - field.storage.result.field_7_day
-    - field.storage.result.field_blc_status
     - field.storage.result.field_latest_avg
   module:
-    - charts
-    - charts_c3
     - esm_test_result_base
   enforced:
     module:
@@ -238,69 +235,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-        field_blc_status:
-          id: field_blc_status
-          table: result__field_blc_status
-          field: field_blc_status
-          relationship: none
-          group_type: group
-          admin_label: ''
-          plugin_id: field
-          label: Status
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: true
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: value
-          type: blc_status
-          settings:
-            link_to_entity: 0
-          group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
         field_latest_avg:
           id: field_latest_avg
           table: result__field_latest_avg
@@ -355,7 +289,7 @@ display:
           settings:
             thousand_separator: ''
             decimal_separator: .
-            scale: 2
+            scale: 4
             prefix_suffix: true
           group_column: value
           group_columns: {  }
@@ -421,7 +355,7 @@ display:
           settings:
             thousand_separator: ''
             decimal_separator: .
-            scale: 2
+            scale: 4
             prefix_suffix: true
           group_column: value
           group_columns: {  }
@@ -487,7 +421,7 @@ display:
           settings:
             thousand_separator: ''
             decimal_separator: .
-            scale: 2
+            scale: 4
             prefix_suffix: true
           group_column: value
           group_columns: {  }
@@ -733,7 +667,6 @@ display:
       tags:
         - 'config:field.storage.result.field_30_day'
         - 'config:field.storage.result.field_7_day'
-        - 'config:field.storage.result.field_blc_status'
         - 'config:field.storage.result.field_latest_avg'
   base:
     id: base
@@ -753,127 +686,4 @@ display:
       tags:
         - 'config:field.storage.result.field_30_day'
         - 'config:field.storage.result.field_7_day'
-        - 'config:field.storage.result.field_blc_status'
-        - 'config:field.storage.result.field_latest_avg'
-  chart_base:
-    id: chart_base
-    display_title: 'Chart Base'
-    display_plugin: block
-    position: 2
-    display_options:
-      enabled: false
-      style:
-        type: chart
-        options:
-          grouping: {  }
-          chart_settings:
-            library: c3
-            type: line
-            fields:
-              label: created
-              stacking: false
-              data_providers:
-                id:
-                  enabled: false
-                  color: '#006fb0'
-                  weight: 9
-                title:
-                  enabled: false
-                  color: '#f07c33'
-                  weight: 9
-                field_url:
-                  enabled: false
-                  color: '#342e9c'
-                  weight: 9
-                created:
-                  enabled: false
-                  color: '#579b17'
-                  weight: 9
-                field_info:
-                  enabled: true
-                  color: '#3f067a'
-                  weight: 7
-                field_error:
-                  enabled: true
-                  color: '#cbde67'
-                  weight: 7
-                field_non_doc_error:
-                  enabled: true
-                  color: '#7643b6'
-                  weight: 7
-              color_changer: 0
-            display:
-              title: ''
-              title_position: out
-              data_labels: true
-              data_markers: true
-              legend_position: right
-              background: ''
-              three_dimensional: 0
-              polar: 0
-              tooltips: true
-              dimensions:
-                width: ''
-                width_units: '%'
-                height: ''
-                height_units: ''
-              gauge:
-                max: '100'
-                min: '0'
-                green_from: '85'
-                green_to: '100'
-                yellow_from: '50'
-                yellow_to: '85'
-                red_from: '0'
-                red_to: '50'
-            xaxis:
-              title: ''
-              labels_rotation: '0'
-            yaxis:
-              title: ''
-              min: ''
-              max: ''
-              prefix: ''
-              suffix: ''
-              decimal_count: ''
-              labels_rotation: '0'
-      row:
-        type: fields
-        options:
-          default_field_elements: true
-          inline: {  }
-          separator: ''
-          hide_empty: false
-      defaults:
-        style: false
-        row: false
-        fields: true
-        header: false
-      display_description: ''
-      header:
-        area:
-          id: area
-          table: views
-          field: area
-          relationship: none
-          group_type: group
-          admin_label: ''
-          plugin_id: text
-          empty: false
-          content:
-            value: '<h3>[view:title]</h3>'
-            format: basic_html
-          tokenize: false
-      display_extenders: {  }
-    cache_metadata:
-      max-age: -1
-      contexts:
-        - 'languages:language_content'
-        - 'languages:language_interface'
-        - url
-        - url.query_args
-      tags:
-        - 'config:field.storage.result.field_30_day'
-        - 'config:field.storage.result.field_7_day'
-        - 'config:field.storage.result.field_blc_status'
         - 'config:field.storage.result.field_latest_avg'
