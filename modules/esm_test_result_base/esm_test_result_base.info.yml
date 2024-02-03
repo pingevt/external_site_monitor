@@ -6,7 +6,7 @@ core_version_requirement: ^9 || ^10
 configure: entity.result_type.collection
 
 
-# Information added by packaging script on 2024-01-27
-version: 1.0.1-beta3
+# Information added by packaging script on 2024-02-03
+version: 1.0.1-rc1
 project: external_site_monitor
-datestamp: 1706415805877
+datestamp: 1706996424569

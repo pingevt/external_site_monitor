@@ -10,7 +10,7 @@ dependencies:
 configure: esm_test_lighthouse.lighthouse_test_settings
 
 
-# Information added by packaging script on 2024-01-27
-version: 1.0.1-beta3
+# Information added by packaging script on 2024-02-03
+version: 1.0.1-rc1
 project: external_site_monitor
-datestamp: 1706415805877
+datestamp: 1706996424569

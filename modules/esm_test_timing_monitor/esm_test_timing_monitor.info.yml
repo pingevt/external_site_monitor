@@ -11,3 +11,9 @@ configure: esm_test_timing_monitor.tm_test_settings
 
 
 
+
+
+# Information added by packaging script on 2024-02-03
+version: 1.0.1-rc1
+project: external_site_monitor
+datestamp: 1706996424569
