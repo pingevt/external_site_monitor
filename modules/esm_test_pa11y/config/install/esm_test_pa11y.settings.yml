@@ -1,0 +1,8 @@
+branch: master
+api_url: 'https://api.github.com/repos/bluecadet/panth-github-actions/actions/workflows/97808333/dispatches'
+github_token: github_auth
+dir: 'public://pa11y-reports'
+dependencies:
+  enforced:
+    module:
+      - esm_test_pa11y

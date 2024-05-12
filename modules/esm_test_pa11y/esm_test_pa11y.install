@@ -1,0 +1,8 @@
+<?php
+
+/**
+ * @file
+ * Handle install and updates for the pa11y tests.
+ */
+
+use Drupal\esm_test_result_base\Entity\Result;

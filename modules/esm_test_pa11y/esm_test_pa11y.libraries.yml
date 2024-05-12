@@ -1,0 +1,7 @@
+test_pa11y:
+  version: VERSION
+  css:
+    layout:
+      assets/dist/css/pa11y_results.css: {}
+  dependencies:
+    - external_site_monitor/esm_base

@@ -1,0 +1,17 @@
+esm_test_pa11y.pa11y_test_settings:
+  path: '/admin/config/esm/pa11y-test-settings'
+  defaults:
+    _title: 'Pa11y test settings'
+    _form: 'Drupal\esm_test_pa11y\Form\Pa11yTestSettingsForm'
+  requirements:
+    _permission: 'administer site configuration'
+
+esm_test_pa11y.pa11y_results:
+  path: /api/pa11y-report-results
+  defaults:
+    _controller: '\Drupal\esm_test_pa11y\Controller\Api::pa11yResults'
+  methods: [POST]
+  requirements:
+    _permission: "use esm api"
+  options:
+    _auth: [ 'key_auth' ]

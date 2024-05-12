@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - esm_test_pa11y
+id: pa11y_test
+label: 'Pa11y Test'

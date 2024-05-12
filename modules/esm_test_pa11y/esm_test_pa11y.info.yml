@@ -1,0 +1,11 @@
+name: 'External Site Monitor: Pa11y Testing'
+type: module
+description: 'Provides tests for Pa11y'
+package: External Site Monitor
+core_version_requirement: ^9 || ^10
+dependencies:
+  - external_site_monitor:esm_test_base
+  - external_site_monitor:esm_test_result_base
+
+configure: esm_test_pa11y.pa11y_test_settings
+

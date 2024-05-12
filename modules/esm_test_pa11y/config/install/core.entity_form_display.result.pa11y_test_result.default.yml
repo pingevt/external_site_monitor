@@ -1,0 +1,75 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - esm_test_result_base.result_type.pa11y_test_result
+    - field.field.result.pa11y_test_result.field_pa11y_html_report
+    - field.field.result.pa11y_test_result.field_pa11y_json_report
+    - field.field.result.pa11y_test_result.field_pa11y_upload_dir
+    - field.field.result.pa11y_test_result.field_url
+  module:
+    - file
+    - link
+  enforced:
+    module:
+      - esm_test_pa11y
+id: result.pa11y_test_result.default
+targetEntityType: result
+bundle: pa11y_test_result
+mode: default
+content:
+  created:
+    type: datetime_timestamp
+    weight: 2
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_pa11y_html_report:
+    type: file_generic
+    weight: 12
+    region: content
+    settings:
+      progress_indicator: throbber
+    third_party_settings: {  }
+  field_pa11y_json_report:
+    type: file_generic
+    weight: 11
+    region: content
+    settings:
+      progress_indicator: throbber
+    third_party_settings: {  }
+  field_pa11y_upload_dir:
+    type: string_textfield
+    weight: 4
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_url:
+    type: link_default
+    weight: 3
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+  test:
+    type: entity_reference_autocomplete
+    weight: 1
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  title:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden: {  }
