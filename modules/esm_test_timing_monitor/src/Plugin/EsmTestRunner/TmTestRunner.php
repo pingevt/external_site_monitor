@@ -177,7 +177,7 @@ class TmTestRunner extends EsmTestRunnerBase implements EsmTestRunnerInterface, 
    * {@inheritdoc}
    */
   public function buildResultsSummary($test, &$build) {
-    ksm('buildResultsSummary');
+    // ksm('buildResultsSummary');
     if ($result = $this->getMostRecentResult($test)) {
       $badge = $this->getStatusBadge($result);
       $build['status_' . $result->id()] = $badge->renderArray();
