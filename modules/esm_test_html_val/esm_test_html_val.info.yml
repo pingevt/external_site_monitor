@@ -2,7 +2,7 @@ name: 'External Site Monitor: HTML Validator'
 type: module
 description: 'Provides tests for HTML validation using W3.org checker'
 package: External Site Monitor
-core_version_requirement: ^9 || ^10
+core_version_requirement: ^10 || ^11
 dependencies:
   - external_site_monitor:esm_test_base
   - external_site_monitor:esm_test_result_base
