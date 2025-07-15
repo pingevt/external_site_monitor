@@ -5,9 +5,9 @@ package: External Site Monitor
 core_version_requirement: ^10 || ^11
 dependencies:
   - drupal:text
+  - external_site_monitor:external_site_monitor
   - external_site_monitor:esm_site
   - external_site_monitor:esm_url_group
-  # - esm_test_result_base
   - ultimate_cron
   - charts
 configure: entity.test_type.collection

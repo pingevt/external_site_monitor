@@ -17,6 +17,8 @@ class BlcTests extends UnitTestCase {
    * Create new unit object.
    */
   public function setUp() {
+    parent::setUp();
+
     $this->siteCrawler = new SiteCrawlerController();
   }
 
