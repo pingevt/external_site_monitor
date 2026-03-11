@@ -1,6 +1,6 @@
 {
   "name": "external_site_monitor",
-  "version": "1.0.1-rc1",
+  "version": "1.0.1-rc2",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/pingevt/external_site_monitor#readme",
   "dependencies": {
-    "@bluecadet/drops": "^1.0.0-alpha.5"
+    "@bluecadet/drops": "^1.1.0"
   },
   "devDependencies": {
     "concurrently": "^7.6.0",
